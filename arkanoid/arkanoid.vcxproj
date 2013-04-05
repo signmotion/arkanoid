@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{8EEE78AF-7BB3-4DB4-B2F8-0CC9C39210AA}</ProjectGuid>
+    <RootNamespace>arkanoid</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>V:\bin\$(ProjectName)\$(Solution)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>V:\temp\$(ProjectName)\$(Solution)$(Configuration)\</IntDir>
+    <IncludePath>$(BOOST_ROOT);external/phrophecysdk/include;external/phrophecysdk/src/extlib/openexr/Half;external/typelib;external/newton-dynamics/coreLibrary_200/source/core;external/newton-dynamics/coreLibrary_200/source/newton;external/newton-dynamics/coreLibrary_200/source/physics;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_ROOT)/stage/lib;external/phrophecysdk/lib/visual studio .net 2003;external/newton-dynamics/coreLibrary_200/projets/windows/project_vs2010/Win32/newton/debugDll MDd;external/newton-dynamics/coreLibrary_200/projets/windows/project_vs2010/Win32/core/debugDll MDd;external/newton-dynamics/coreLibrary_200/projets/windows/project_vs2010/Win32/physics/debugDll MDd;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>prcore.lib;newton_d.lib;core.lib;physics.lib;ddraw.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy media\*.level V:\bin\arkanoid\Debug\media\ /E /Y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Border.cpp" />
+    <ClCompile Include="src\Platform.cpp" />
+    <ClCompile Include="src\Racket.cpp" />
+    <ClCompile Include="src\ManagerSprite.cpp" />
+    <ClCompile Include="src\PPIncarnate.cpp" />
+    <ClCompile Include="src\CollidableMaterial.cpp" />
+    <ClCompile Include="src\Container.cpp" />
+    <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\NDIncarnate.cpp" />
+    <ClCompile Include="src\Level.cpp" />
+    <ClCompile Include="src\Console.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Border.h" />
+    <ClInclude Include="include\CollidableMaterial.h" />
+    <ClInclude Include="include\Container.h" />
+    <ClInclude Include="include\configure.h" />
+    <ClInclude Include="include\Console.h" />
+    <ClInclude Include="include\Exception.h" />
+    <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\World.h" />
+    <ClInclude Include="include\Level.h" />
+    <ClInclude Include="include\NDIncarnate.h" />
+    <ClInclude Include="include\Material.h" />
+    <ClInclude Include="include\PPIncarnate.h" />
+    <ClInclude Include="include\ManagerSprite.h" />
+    <ClInclude Include="include\Platform.h" />
+    <ClInclude Include="include\Racket.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

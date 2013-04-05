@@ -1,0 +1,15 @@
+*.log
+
+*.ipch
+
+*.obj
+
+*.opensdf
+
+*.pdb
+
+*.pch
+
+*.tlog
+
+*.sdf

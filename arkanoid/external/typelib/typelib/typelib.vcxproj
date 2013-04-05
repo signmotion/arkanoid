@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{41DEF228-0340-4356-99FE-FC473A36B1DE}</ProjectGuid>
+    <RootNamespace>typelib</RootNamespace>
+    <ProjectName>typelib</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(BOOST_ROOT);D:\Projects\workspace\utils\bm3.7.0\src;$(IncludePath)</IncludePath>
+    <IntDir>V:\temp\debug-typelib\$(MSBuildProjectName)\</IntDir>
+    <OutDir>V:\bin\debug-typelib\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>D:\Projects\workspace\utils\bm3.7.0\src;$(BOOST_ROOT);$(IncludePath)</IncludePath>
+    <OutDir>V:\bin\typelib\</OutDir>
+    <IntDir>V:\temp\typelib\$(MSBuildProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib />
+    <Lib>
+      <TreatLibWarningAsErrors>true</TreatLibWarningAsErrors>
+      <Verbose>true</Verbose>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <TreatLibWarningAsErrors>true</TreatLibWarningAsErrors>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\file.h" />
+    <ClInclude Include="include\json.h" />
+    <ClInclude Include="include\line.h" />
+    <ClInclude Include="external\smallsha1\sha1.h" />
+    <ClInclude Include="include\constant.h" />
+    <ClInclude Include="include\coord2.h" />
+    <ClInclude Include="include\geometry-compute.h" />
+    <None Include="include\file.inl">
+      <FileType>Document</FileType>
+    </None>
+    <ClInclude Include="include\mapcontent2d\DMapContent2D.h" />
+    <ClInclude Include="include\mapcontent2d\-ObjectPtrDMap2D.h" />
+    <ClInclude Include="include\mapcontent3d\DMapContent3D.h" />
+    <ClInclude Include="include\mapcontent3d\DynamicMapContent3D.h" />
+    <ClInclude Include="include\mapcontent2d\DynamicMapContent2D.h" />
+    <ClInclude Include="include\physics-compute.h" />
+    <ClInclude Include="include\size.h" />
+    <ClInclude Include="include\size2.h" />
+    <ClInclude Include="include\time.h" />
+    <ClInclude Include="include\mapcontent3d\StaticMapContent3D.h" />
+    <None Include="include\json.inl" />
+    <None Include="include\mapcontent2d\-ObjectPtrDMap2D.inl" />
+    <None Include="include\mapcontent3d\BitMap.inl">
+      <FileType>Document</FileType>
+    </None>
+    <ClInclude Include="include\mapcontent3d\VectorMap.h" />
+    <ClInclude Include="include\mapcontent3d\NumberMap.h" />
+    <ClInclude Include="include\codepage.h" />
+    <ClInclude Include="configure.h" />
+    <ClInclude Include="include\coord.h" />
+    <ClInclude Include="include\hash.h" />
+    <ClInclude Include="include\mapcontent3d\BitMap.h" />
+    <ClInclude Include="include\mapcontent3d\FilterMap.h" />
+    <ClInclude Include="include\mapcontent3d\InverseFilterMap.h" />
+    <ClInclude Include="include\mapcontent3d\MapContent3D.h" />
+    <ClInclude Include="include\mapcontent3d\NeightbourFilterMap.h" />
+    <ClInclude Include="include\mapcontent3d\OutlineFilterMap.h" />
+    <ClInclude Include="include\mapcontent3d\SignBitMap.h" />
+    <ClInclude Include="include\mapcontent3d\SignNumberMap.h" />
+    <ClInclude Include="include\Name.h" />
+    <ClInclude Include="include\mapcontent3d\StructMap.h" />
+    <ClInclude Include="include\other.h" />
+    <ClInclude Include="include\Sign.h" />
+    <None Include="include\mapcontent3d\SignBitMap.inl">
+      <FileType>Document</FileType>
+    </None>
+    <ClInclude Include="include\mapcontent2d\StaticMapContent2D.h" />
+    <ClInclude Include="include\vector.h" />
+    <ClInclude Include="include\vector2.h" />
+    <ClInclude Include="typelib.h" />
+    <ClInclude Include="include\random.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\coord.inl" />
+    <None Include="include\coord2.inl" />
+    <None Include="include\line.inl" />
+    <None Include="include\geometry-compute.inl" />
+    <None Include="include\physics-compute.inl" />
+    <None Include="include\size.inl" />
+    <None Include="include\size2.inl" />
+    <None Include="include\mapcontent3d\VectorMap.inl" />
+    <None Include="include\mapcontent3d\SignNumberMap.inl" />
+    <None Include="include\mapcontent3d\NumberMap.inl" />
+    <None Include="include\mapcontent3d\StructMap.inl" />
+    <None Include="include\vector.inl" />
+    <None Include="include\vector2.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="external\smallsha1\sha1.inl">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

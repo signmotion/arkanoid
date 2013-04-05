@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Файлы исходного кода">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Заголовочные файлы">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Файлы ресурсов">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Заголовочные файлы\external">
+      <UniqueIdentifier>{bc54de26-d324-4652-979f-71c6006ebd0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\external\cajun">
+      <UniqueIdentifier>{3033511c-dbf0-4389-b2ad-9d22d8670192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\external\smallsha1">
+      <UniqueIdentifier>{70b43957-8999-4633-8ff1-d46b5f789f71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\mapcontent3d">
+      <UniqueIdentifier>{5e4f39b8-f7e9-4516-bb96-b8c26a3cdab5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Sign.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Name.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\hash.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="external\smallsha1\sha1.h">
+      <Filter>Заголовочные файлы\external\smallsha1</Filter>
+    </ClInclude>
+    <ClInclude Include="include\codepage.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\coord.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\other.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\BitMap.h">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\FilterMap.h">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\InverseFilterMap.h">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\MapContent3D.h">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\NeightbourFilterMap.h">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\OutlineFilterMap.h">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\SignBitMap.h">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\SignNumberMap.h">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </ClInclude>
+    <ClInclude Include="typelib.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="configure.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\NumberMap.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vector.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\VectorMap.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\StructMap.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\StaticMapContent3D.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\constant.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\random.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent2d\StaticMapContent2D.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\coord2.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\vector2.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\line.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\time.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\file.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\size2.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\size.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\geometry-compute.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\physics-compute.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\json.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\DynamicMapContent3D.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent2d\DynamicMapContent2D.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent3d\DMapContent3D.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent2d\DMapContent2D.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mapcontent2d\-ObjectPtrDMap2D.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\coord.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\mapcontent3d\SignNumberMap.inl">
+      <Filter>Заголовочные файлы\mapcontent3d</Filter>
+    </None>
+    <None Include="include\mapcontent3d\NumberMap.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\vector.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\mapcontent3d\VectorMap.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\mapcontent3d\StructMap.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\coord2.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\vector2.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\line.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\size2.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\size.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\physics-compute.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\geometry-compute.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="external\smallsha1\sha1.inl">
+      <Filter>Заголовочные файлы\external\smallsha1</Filter>
+    </None>
+    <None Include="include\file.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\mapcontent3d\SignBitMap.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\mapcontent3d\BitMap.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\json.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+    <None Include="include\mapcontent2d\-ObjectPtrDMap2D.inl">
+      <Filter>Заголовочные файлы</Filter>
+    </None>
+  </ItemGroup>
+</Project>
