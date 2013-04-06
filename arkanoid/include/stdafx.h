@@ -62,6 +62,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/math/special_functions/round.hpp>
 #include <boost/numeric/interval.hpp>
+#include <boost/thread/thread.hpp>
 
 
 #include <prcore/prcore.hpp>

@@ -7,18 +7,14 @@ inline Variant::Variant( const string_t& s ) : std::shared_ptr< boost::any >() {
         // идеальный JSON-объект
         parse( this, s );
 
-    } catch ( const ::json::Exception& ex ) {
-        std::cerr << "(!) Clear parsing: " <<
-            std::endl << ex.what() << std::endl;
+    } catch ( const ::json::Exception& ) {
         // Понимаем, когда строка содержит не обёрнутый в '{}' объект
         // плюс однострочные комментарии '//'
         try {
             const ::std::string ps = "{" + noComment( s ) + "}";
             parse( this, ps );
 
-        } catch ( const ::json::Exception& ex ) {
-            std::cerr << "(!) Parse as object without comments: " <<
-                std::endl << ex.what() << std::endl;
+        } catch ( const ::json::Exception& ) {
             // Понимаем, когда строка содержит примечания
             try {
                 const ::std::string ps = noComment( s );
@@ -26,9 +22,7 @@ inline Variant::Variant( const string_t& s ) : std::shared_ptr< boost::any >() {
                     && "После удаления комментариев получили пустое содержание." );
                 parse( this, ps );
 
-            } catch ( const ::json::Exception& ex ) {
-                std::cerr << "(!) Parse without comments: " <<
-                    std::endl << ex.what() << std::endl;
+            } catch ( const ::json::Exception& ) {
                 // Понимаем когда вместо двойных кавычек используются одинарные
                 try {
                     ::std::string ps = s;

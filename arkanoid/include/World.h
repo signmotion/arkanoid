@@ -6,11 +6,13 @@
 namespace arkanoid {
 
 
+class Background;
 class Border;
 class Container;
 class Level;
 class Platform;
 class Racket;
+class Remains;
 
 
 /**
@@ -21,10 +23,13 @@ class World :
     private prcore::FrameBuffer
 {
 public:
+    typedef std::unique_ptr< Background >              background_t;
+
     typedef std::list< std::unique_ptr< Border > >     borderSet_t;
     typedef std::list< std::unique_ptr< Container > >  containerSet_t;
     typedef std::list< std::unique_ptr< Platform > >   platformSet_t;
     typedef std::list< std::unique_ptr< Racket > >     racketSet_t;
+    typedef std::list< std::unique_ptr< Remains > >    remainsSet_t;
 
 
 
@@ -50,8 +55,7 @@ public:
     /**
     * Оживляет мир.
     */
-	void go();
-    void pulse();
+	void go( size_t startLevel );
 
 
 
@@ -65,9 +69,11 @@ public:
     /**
     * Загружает след. уровень.
     *
+    * @param startLevel Если указан, игра начинается с этого уровня.
+    *
     * @return false если уровней больше нет.
     */
-    bool loadNextLevel();
+    bool loadNextLevel( size_t startLevel = 1 );
 
 
 
@@ -91,8 +97,8 @@ public:
     /**
     * @return Текущее время в мире, мс.
     */
-    static inline int currentTime() {
-        return mCurrentTime;
+    static inline size_t currentTime() {
+        return mTimer.GetTick();
     }
 
 
@@ -117,7 +123,7 @@ private:
 
 private:
     void setPlatformDestination( int x, int y );
-    void movePlatformDestination();
+    void movePlatformToDestination();
     void pushRacket();
 
 
@@ -133,10 +139,13 @@ private:
     /**
     * Элементы мира.
     */
+    background_t    mBackground;
+
     borderSet_t     mBorderSet;
     containerSet_t  mContainerSet;
     platformSet_t   mPlatformSet;
     racketSet_t     mRacketSet;
+    remainsSet_t    mRemainsSet;
 
 
     std::shared_ptr< NewtonWorld >  mPhysics;
@@ -145,10 +154,16 @@ private:
 
 
     /**
+    * Название окна.
+    */
+    static const std::string  mTitleWindow;
+
+
+    /**
     * Текущее время, мс.
     * Может использоваться для корректного тайминга.
     */
-    static int mCurrentTime;
+    static const prcore::Timer  mTimer;
 };
 
 

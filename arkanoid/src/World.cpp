@@ -1,13 +1,21 @@
 #include "../include/stdafx.h"
+#include "../include/Background.h"
 #include "../include/Border.h"
 #include "../include/Container.h"
 #include "../include/Level.h"
 #include "../include/Platform.h"
 #include "../include/Racket.h"
+#include "../include/Remains.h"
 #include "../include/World.h"
 
 
 namespace arkanoid {
+
+
+const std::string  World::mTitleWindow = "Arkanoid demo";
+const prcore::Timer  World::mTimer = prcore::Timer();
+
+
 
 
 World::World( int width, int height ) :
@@ -50,7 +58,8 @@ World::World( int width, int height ) :
 
     // *графический мир*
     {
-        OpenBuffer( width, height, "Arkanoid demo" );
+        OpenBuffer( width, height, mTitleWindow.c_str() );
+        SetMainFrequency( 100.0f );
     }
 }
 
@@ -72,6 +81,7 @@ World::~World() {
     // @todo fine Сделать красиво.
     exit( 0 );
 #endif
+
     NewtonDestroy( mPhysics.get() );
 }
 
@@ -79,23 +89,20 @@ World::~World() {
 
 
 void
-World::go() {
+World::go( size_t startLevel ) {
 
-    const bool present = loadNextLevel();
-    if ( !present ) {
-        // игра пройдена
-        return;
+    for (bool present = loadNextLevel( startLevel );
+        present;
+        present = loadNextLevel()
+    ) {
+        // след. уровень
+        MainLoop();
     }
 
-    // след. уровень
-    MainLoop();
-}
-
-
-
-
-void
-World::pulse() {
+    // игра пройдена
+#ifdef _DEBUG
+    CONSOLE << "\n\nУровней больше нет." << std::endl;
+#endif
 }
 
 
@@ -118,15 +125,25 @@ World::physics() const {
 
 
 bool
-World::loadNextLevel() {
+World::loadNextLevel( size_t startLevel ) {
+    
+    const size_t nextLevel = mLevel ? (mLevel->current + 1) : startLevel;
+    if ( !Level::has( nextLevel ) ) {
+        // уровней больше нет
+        return false;
+    }
 
-    const size_t q = mLevel ? (mLevel->current + 1) : 1;
-    mLevel = std::unique_ptr< Level >( new Level( q ) );
+#ifdef _DEBUG
+    CONSOLE << "\n\nУровень " << nextLevel << std::endl;
+#endif
+
+    mLevel = std::unique_ptr< Level >( new Level( nextLevel ) );
 
 
     // построим мир согласно полученному выше mLevel
 
     // границы мира
+    mBorderSet.clear();
     {
         static const int  THICKNESS = 100;
         static const int  SHIFT = static_cast< int >( CELL_SIZE ) / 2;
@@ -137,7 +154,7 @@ World::loadNextLevel() {
             typelib::size2Int_t( 1, 1 ),
             typelib::size2Int_t( WINDOW_WIDTH, THICKNESS ),
             typelib::coord2Int_t( 0, -THICKNESS + SHIFT ),
-            typelib::coord2_t::ZERO()
+            typelib::coord2Int_t::ZERO()
         ) );
         mBorderSet.push_back( std::move( top ) );
 
@@ -150,7 +167,7 @@ World::loadNextLevel() {
                 WINDOW_WIDTH + THICKNESS / 2 - SHIFT,
                 WINDOW_HEIGHT / 2
             ),
-            typelib::coord2_t::ZERO()
+            typelib::coord2Int_t::ZERO()
         ) );
         mBorderSet.push_back( std::move( right ) );
 
@@ -160,24 +177,41 @@ World::loadNextLevel() {
             typelib::size2Int_t( 1, 1 ),
             typelib::size2Int_t( THICKNESS, WINDOW_HEIGHT * 2 ),
             typelib::coord2Int_t( -THICKNESS / 2 - SHIFT, WINDOW_HEIGHT / 2 ),
-            typelib::coord2_t::ZERO()
+            typelib::coord2Int_t::ZERO()
         ) );
         mBorderSet.push_back( std::move( left ) );
     }
 
 
+    // фон
+    mBackground.reset();
+    {
+        const auto& about = mLevel->mAboutBackground;
+        // # Фон растягивается на всё игровое окно.
+        // @todo Предупреждать, когда размеры окна и фона значительно отличаются.
+        const typelib::size2Int_t  size( WINDOW_WIDTH, WINDOW_HEIGHT );
+        mBackground = std::unique_ptr< Background >( new Background(
+            about.sprite,
+            size,
+            typelib::coord2Int_t::ZERO()
+        ) );
+    }
+
+
     // платформа
+    mPlatformSet.clear();
     {
         std::unique_ptr< Platform >  platform;
-        const Level::AboutPlatform&  about = mLevel->mAboutPlatform;
+        const auto& about = mLevel->mAboutPlatform;
         if (about.kind == "Capsule") {
+            const typelib::size2Int_t  size( 128, 16 );
             platform = std::unique_ptr< Platform >( new CapsulePlatform(
                 this->shared_from_this(),
                 about.sprite,
-                typelib::size2Int_t( 128, 32 ),
-                typelib::size2Int_t( 128, 32 ),
-                typelib::coord2Int_t( WINDOW_WIDTH / 2,  WINDOW_HEIGHT - 32 * 2 ),
-                typelib::coord2_t::ZERO()
+                size,
+                size,
+                typelib::coord2Int_t( WINDOW_WIDTH / 2,  WINDOW_HEIGHT - size.y * 2 ),
+                typelib::coord2Int_t::ZERO()
             ) );
 
         } else {
@@ -194,9 +228,10 @@ World::loadNextLevel() {
 
 
     // ракетка
+    mRacketSet.clear();
     {
         std::unique_ptr< Racket >  racket;
-        const Level::AboutRacket&  about = mLevel->mAboutRacket;
+        const auto& about = mLevel->mAboutRacket;
         if (about.kind == "Sphere") {
             racket = std::unique_ptr< Racket >( new SphereRacket(
                 this->shared_from_this(),
@@ -205,7 +240,7 @@ World::loadNextLevel() {
                 // # Сама ракетка меньше размера спрайта.
                 (32 - 8) / 2,
                 typelib::coord2Int_t( WINDOW_WIDTH / 2,  WINDOW_HEIGHT / 3 * 2 ),
-                typelib::coord2_t::ZERO()
+                typelib::coord2Int_t::ZERO()
             ) );
 
         } else {
@@ -221,26 +256,30 @@ World::loadNextLevel() {
         && "Ожидается единственная ракетка." );
 
 
-    // контейнеры
+    // контейнеры и останки
+    // # Контейнеры и останки декларированы на одной карте.
+    mContainerSet.clear();
+    mRemainsSet.clear();
     typelib::coord2_t  coord( 0, 0 );
     const auto& needVisualSize = mLevel->mCell;
-    for (auto itr = mLevel->mContainerMap.cbegin();
-         itr != mLevel->mContainerMap.cend();  ++itr
+    for (auto itr = mLevel->mMap.cbegin();
+         itr != mLevel->mMap.cend();  ++itr
     ) {
         const Level::row_t&  row = *itr;
         // # Допустимо указывать пустую строку.
         for (auto rtr = row.cbegin(); rtr != row.cend(); ++rtr) {
             const Level::sign_t  sign = *rtr;
 #ifdef _DEBUG
-            CONSOLE << "Cell " << coord << " '" << sign << "'" << std::endl;
+            //CONSOLE << "Cell " << coord << " '" << sign << "'" << std::endl;
 #endif
             // # Символ '.' означает "пустая ячейка".
             if (sign != '.') {
-                const auto ftr = mLevel->mAboutContainerSign.find( sign );
-                ASSERT( (ftr != mLevel->mAboutContainerSign.cend())
+                const auto ftr = mLevel->mAboutSetSign.find( sign );
+                ASSERT( (ftr != mLevel->mAboutSetSign.cend())
                     && "Информация о контейнере отсутствует." );
-                const Level::AboutContainer&  about = ftr->second;
+                const Level::AboutSet&  about = ftr->second;
                 std::unique_ptr< Container >  container;
+                std::unique_ptr< Remains >    remains;
                 if (about.kind == "Cube") {
                     container = std::unique_ptr< Container >( new CubeContainer(
                         this->shared_from_this(),
@@ -248,7 +287,7 @@ World::loadNextLevel() {
                         needVisualSize,
                         mLevel->mCell.x,
                         coord,
-                        typelib::coord2_t::ZERO()
+                        typelib::coord2Int_t::ZERO()
                     ) );
 
                 } else if (about.kind == "Sphere") {
@@ -258,7 +297,15 @@ World::loadNextLevel() {
                         needVisualSize,
                         mLevel->mCell.x / 2,
                         coord,
-                        typelib::coord2_t::ZERO()
+                        typelib::coord2Int_t::ZERO()
+                    ) );
+
+                } else if (about.kind == "Remains") {
+                    remains = std::unique_ptr< Remains >( new Remains(
+                        about.sprite,
+                        needVisualSize,
+                        coord,
+                        typelib::coord2Int_t::ZERO()
                     ) );
 
                 } else {
@@ -266,9 +313,15 @@ World::loadNextLevel() {
                         && "Вид контейнера не распознан." );
                 }
 
-                ASSERT( ( container || (sign == '.') )
-                    && "Подходящий контейнер не создан." );
-                mContainerSet.push_back( std::move( container ) );
+                ASSERT( ( container || remains || (sign == '.') )
+                    && "Подходящий образ не создан." );
+
+                if ( container ) {
+                    mContainerSet.push_back( std::move( container ) );
+
+                } else if ( remains ) {
+                    mRemainsSet.push_back( std::move( remains ) );
+                }
 
             } // if (sign != '.')
 
@@ -286,7 +339,7 @@ World::loadNextLevel() {
     } // for (auto itr = ...
 
     ASSERT( !mContainerSet.empty()
-        && "Уровень не должен бть пустым." );
+        && "Уровень не должен быть пустым." );
 
 
     return mLevel;
@@ -317,35 +370,52 @@ World::EventMain() {
 void
 World::EventDraw() {
 
+    using namespace prcore;
+
+    // вычисляем и показываем FPS
+    // # Ограничение на FPS поставлено при создании окна - см. World().
+    static auto lastTime = World::currentTime();
+	const auto currentTime = World::currentTime();
+	auto deltaTime = currentTime - lastTime;
+    // ждём: окно приложения могут перетаскивать
+	if (deltaTime > 1000) { deltaTime = 1000; }
+    // 'deltaTime' можно использовать для корректного тайминга
+    lastTime = currentTime;
+    const size_t fps = calcFPS( deltaTime );
+    const std::string title =
+        mTitleWindow + "  " + boost::lexical_cast< std::string >( fps ) + " fps";
+    RenameWindow( title.c_str() );
+
+
     static const uint32 bgColor = 0xFF5DA130;
     mVisual.ClearImage( bgColor );
 
 
     // физика
     {
-        movePlatformDestination();
-        NewtonUpdate( mPhysics.get(),  1.0f / 100.0f );
+        movePlatformToDestination();
+        NewtonUpdate( mPhysics.get(),  1.0f / 60.0f );
     }
 
     // графика
     {
         // # Границы мира не рисуются.
 
-        for (auto ctr = mContainerSet.cbegin();
-             ctr != mContainerSet.cend(); ++ctr
-        ) {
+        mBackground->draw( mVisual );
+
+        for (auto ctr = mRemainsSet.cbegin(); ctr != mRemainsSet.cend(); ++ctr ) {
             ( *ctr )->draw( mVisual );
         }
 
-        for (auto ptr = mPlatformSet.cbegin();
-             ptr != mPlatformSet.cend(); ++ptr
-        ) {
+        for (auto ctr = mContainerSet.cbegin(); ctr != mContainerSet.cend(); ++ctr ) {
+            ( *ctr )->draw( mVisual );
+        }
+
+        for (auto ptr = mPlatformSet.cbegin(); ptr != mPlatformSet.cend(); ++ptr ) {
             ( *ptr )->draw( mVisual );
         }
 
-        for (auto rtr = mRacketSet.cbegin();
-             rtr != mRacketSet.cend(); ++rtr
-        ) {
+        for (auto rtr = mRacketSet.cbegin(); rtr != mRacketSet.cend(); ++rtr ) {
             ( *rtr )->draw( mVisual );
         }
     }
@@ -353,8 +423,6 @@ World::EventDraw() {
 
     BlitWrite( 0, 0, mVisual );
 	PageFlip();
-
-    pulse();
 }
 
 
@@ -449,7 +517,7 @@ World::setPlatformDestination( int x,  int y ) {
 
 
 void
-World::movePlatformDestination() {
+World::movePlatformToDestination() {
 
     // # Платформа перемещается вдоль оси OX.
     auto& platform = mPlatformSet.front();

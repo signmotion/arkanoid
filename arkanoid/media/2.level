@@ -1,0 +1,67 @@
+// Внутренний двор
+
+
+"background": {
+    "sprite": "background/dirt1.jpg"
+},
+
+
+"platform": {
+    "kind":   "Capsule",
+    "sprite": "platform/capsule-128x16.png"
+},
+
+
+"racket": {
+    "kind":   "Sphere",
+    "sprite": "dc/mon/animals/boulder_beetle_rolling0.png"
+},
+
+
+"cell": [ 32, 32 ],
+
+
+"set": {
+    "1": {
+        "kind":   "Cube",
+        "sprite": "dc/dngn/wall/brick_brown7.png"
+    },
+    "2": {
+        "kind":   "Cube",
+        "sprite": "dc/dngn/wall/brick_brown0.png",
+        "next": "1"
+    },
+
+    "o": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc.png",
+        "next": "_"
+    },
+    "p": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc_priest.png",
+        "next": "_"
+    },
+    "w": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc_warrior.png",
+        "next": "_"
+    },
+
+    "_": {
+        "kind":   "Remains",
+        "sprite": "dc/misc/blood/blood_puddle_red3.png"
+    }
+},
+
+
+"map": [
+    ". . p . . . . . . . . . . . . . . p . . ",
+    ". . 2 2 . w w w . . . . w w w . 2 2 . . ",
+    "o . . . . 2 2 2 2 . . 2 2 2 2 . . . . o ",
+    "2 2 . . . . . . . . . . . . . . . . 2 2 ",
+    ". . . o w . . . . w w . . . . w o . . . ",
+    ". . . 2 2 2 . . 2 2 2 2 . . 2 2 2 . . . ",
+    ". . . . . . . . . . _ . . . . . . . . . ",
+    "1 1 1 1 1 1 1 1 1 . . 1 1 1 1 1 1 1 1 1 "
+]

@@ -8,6 +8,9 @@
 namespace arkanoid {
 
 
+/**
+* # Контейнер - то, что разбивается.
+*/
 class Container :
     public PPIncarnate,
     public NDIncarnate

@@ -5,7 +5,7 @@
 
 
 
-void run();
+void run( size_t startLevel );
 
 
 
@@ -23,10 +23,14 @@ main( int argc, char** argv ) {
     setlocale( LC_NUMERIC, "C" );
 
 
+    const size_t startLevel =
+        (argc > 1) ? std::atoi( argv[ 1 ] ) : 1;
+
+
     // создаём мир
     int code = 0;
     try {
-        run();
+        run( startLevel );
         
     } catch ( const Exception& ex ) {
         std::cerr << std::endl << ex.what() << std::endl;
@@ -43,14 +47,14 @@ main( int argc, char** argv ) {
     } catch ( const char* const ex ) {
         std::cerr << std::endl << *ex << std::endl;
         code = -200;
-
+        
     } catch ( ... ) {
         std::cerr << std::endl << "(!) Unknown exception." << std::endl;
         code = -300;
     }
 
     std::cout << "\n^\n";
-    //std::cin.ignore();
+    std::cin.ignore();
 
     return code;
 
@@ -64,10 +68,10 @@ main( int argc, char** argv ) {
 
 
 inline void
-run() {
+run( size_t startLevel ) {
 
     using namespace arkanoid;
 
     std::shared_ptr< World >  w = World::valueOf();
-    w->go();
+    w->go( startLevel );
 }

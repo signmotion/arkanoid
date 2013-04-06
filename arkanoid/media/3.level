@@ -1,0 +1,93 @@
+// Донжон
+
+
+"background": {
+    "sprite": "background/stone1.jpg"
+},
+
+
+"platform": {
+    "kind":   "Capsule",
+    "sprite": "platform/capsule-128x16.png"
+},
+
+
+"racket": {
+    "kind":   "Sphere",
+    "sprite": "dc/mon/animals/boulder_beetle_rolling0.png"
+},
+
+
+"cell": [ 32, 32 ],
+
+
+"set": {
+    "0": {
+        "kind":   "Cube",
+        "sprite": "dc/dngn/wall/crystal_wall10.png",
+        // # Не разбиваемая стена.
+        "next": "0"
+    },
+    "1": {
+        "kind":   "Cube",
+        "sprite": "dc/dngn/wall/brick_brown7.png"
+    },
+    "2": {
+        "kind":   "Cube",
+        "sprite": "dc/dngn/wall/brick_brown0.png",
+        "next": "1"
+    },
+
+    "/": {
+        "kind":   "Cube",
+        "sprite": "dc/dngn/closed_door.png"
+    },
+
+    "^": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc_warlord.png",
+        "next": "_"
+    },
+    "k": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc_knight.png",
+        "next": "_"
+    },
+    "o": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc.png",
+        "next": "_"
+    },
+    "p": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc_priest.png",
+        "next": "_"
+    },
+    "s": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc_sorcerer.png",
+        "next": "_"
+    },
+    "w": {
+        "kind":   "Sphere",
+        "sprite": "dc/mon/orc_warrior.png",
+        "next": "_"
+    },
+
+    "_": {
+        "kind":   "Remains",
+        "sprite": "dc/misc/blood/blood_puddle_red3.png"
+    }
+},
+
+
+"map": [
+    ". . . . . . . . . s ^ . . . . . . . . . ",
+    ". . . . . . . . 0 0 0 0 . . . . . . . . ",
+    ". . p . . . . . . . . . . . . . . p . . ",
+    "w w 0 w w . . . k . . k . . . w w 0 w w ",
+    ". . . . . w 0 0 0 0 0 0 0 0 w . . . . . ",
+    ". . . k . . o . . k k . . o . . k . . . ",
+    "2 2 2 / 2 2 2 2 2 2 2 2 2 2 2 2 / 2 2 2 ",
+    ". _ . . . _ _ . . . . _ . . . . _ _ _ _ "
+]
