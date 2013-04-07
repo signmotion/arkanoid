@@ -3,6 +3,7 @@
 #include "../include/Border.h"
 #include "../include/Container.h"
 #include "../include/Level.h"
+#include "../include/Message.h"
 #include "../include/Platform.h"
 #include "../include/Racket.h"
 #include "../include/Remains.h"
@@ -12,54 +13,37 @@
 namespace arkanoid {
 
 
-const std::string  World::mTitleWindow = "Arkanoid demo";
+const typelib::coord2Int_t  World::mStartCoordRacket(
+    WINDOW_WIDTH  / 2,
+    WINDOW_HEIGHT / 5 * 4
+);
+
+const std::string  World::mTitleWindow = "Arkanoid demo DC";
 const prcore::Timer  World::mTimer = prcore::Timer();
 
 
 
 
 World::World( int width, int height ) :
-    mPhysics( NewtonCreate() ),
-    mVisual( width, height, prcore::PIXELFORMAT_ARGB8888 )
+    // # Мир без гравитации.
+    mPhysics( new b2World( b2Vec2_zero ) ),
+    mVisual( width, height, prcore::PIXELFORMAT_ARGB8888 ),
+    mImpactCount( 0 ),
+    mContactPointCount( 0 )
 {
     ASSERT( mPhysics
         && "Не удалось инициализировать физ. движок." );
 
     // *физический мир*
     {
-        NewtonSetPlatformArchitecture( mPhysics.get(), 0 );
-	    NewtonSetSolverModel( mPhysics.get(), 0 );
-        //NewtonSetMinimumFrameRate( mPhysicsWorld, 100.0f );
-
-        // делаем физ. мир намеренно бОльшим, чем игровое окно
-        // # При K = 1 физ. мир в 2 раза больше визуального.
-        static const float K = 1.0f;
-        static const float minmaxSX = static_cast< float >( WINDOW_WIDTH  ) * K;
-        static const float minmaxSY = static_cast< float >( WINDOW_HEIGHT ) * K;
-        // # Физический мир - объёмный.
-        static const float minmaxSZ = static_cast< float >( WINDOW_WIDTH  ) * K;
-        mMinCoord = typelib::coord2Int_t( -minmaxSX, -minmaxSY );
-        mMaxCoord = typelib::coord2Int_t( minmaxSX, minmaxSY );
-	    static const dgVector minSize( -minmaxSX, -minmaxSY, -minmaxSZ, 1.0f );
-	    static const dgVector maxSize(  minmaxSX,  minmaxSY,  minmaxSZ, 1.0f );
-	    NewtonSetWorldSize( mPhysics.get(),  &minSize[ 0 ],  &maxSize[ 0 ] );
-
-        // материал по умолчанию для элементов физ. мира
-        const int defMaterial = NewtonMaterialGetDefaultGroupID( mPhysics.get() );
-        NewtonMaterialSetDefaultCollidable( mPhysics.get(), defMaterial, defMaterial, 1 );
-        NewtonMaterialSetDefaultElasticity( mPhysics.get(), defMaterial, defMaterial, 0.4f );
-        NewtonMaterialSetDefaultFriction(   mPhysics.get(), defMaterial, defMaterial, 1.0f, 0.5f );
-        NewtonMaterialSetDefaultSoftness(   mPhysics.get(), defMaterial, defMaterial, 0.05f );
-
-        // слушаем события из физ. мира
-        NewtonSetBodyLeaveWorldEvent( mPhysics.get(), physicsBodyLeaveWorld );
+        mPhysics->SetContactListener( this );
     }
 
 
     // *графический мир*
     {
         OpenBuffer( width, height, mTitleWindow.c_str() );
-        SetMainFrequency( 100.0f );
+        SetMainFrequency( 200.0f );
     }
 }
 
@@ -68,21 +52,16 @@ World::World( int width, int height ) :
 
 std::shared_ptr< World >
 World::valueOf() {
-    auto r = std::shared_ptr< World >( new World() );
-    return r;
+    return std::shared_ptr< World >( new World() );
 }
 
 
 
 
 World::~World() {
-#ifdef _DEBUG
-    // грубо гасим assert'ы NewtonDynamics при выходе из приложения
+    // грубо гасим assert'ы при выходе из приложения
     // @todo fine Сделать красиво.
     exit( 0 );
-#endif
-
-    NewtonDestroy( mPhysics.get() );
 }
 
 
@@ -108,7 +87,7 @@ World::go( size_t startLevel ) {
 
 
 
-std::shared_ptr< NewtonWorld >
+std::shared_ptr< b2World >
 World::physics() {
     return mPhysics;
 }
@@ -116,7 +95,7 @@ World::physics() {
 
 
 
-std::shared_ptr< const NewtonWorld >
+std::shared_ptr< const b2World >
 World::physics() const {
     return mPhysics;
 }
@@ -143,47 +122,24 @@ World::loadNextLevel( size_t startLevel ) {
     // построим мир согласно полученному выше mLevel
 
     // границы мира
+#if 1
     mBorderSet.clear();
     {
-        static const int  THICKNESS = 100;
-        static const int  SHIFT = static_cast< int >( CELL_SIZE ) / 2;
-        std::unique_ptr< Border >  top( new BoxBorder(
+        // @todo fine Реализовать в виде кубоида Box2D.
+        const int w = static_cast< int >( WINDOW_WIDTH );
+        const int cell = static_cast< int >( CELL_SIZE );
+        std::unique_ptr< Border >  top( new EdgeBorder(
             this->shared_from_this(),
-            // # Границы мира не рисуются.
-            "",
-            typelib::size2Int_t( 1, 1 ),
-            typelib::size2Int_t( WINDOW_WIDTH, THICKNESS ),
-            typelib::coord2Int_t( 0, -THICKNESS + SHIFT ),
-            typelib::coord2Int_t::ZERO()
+            typelib::coord2Int_t( -w * 2,  -cell / 2 ),
+            typelib::coord2Int_t(  w * 2,  -cell / 2 )
         ) );
         mBorderSet.push_back( std::move( top ) );
-
-        std::unique_ptr< Border >  right( new BoxBorder(
-            this->shared_from_this(),
-            "",
-            typelib::size2Int_t( 1, 1 ),
-            typelib::size2Int_t( THICKNESS, WINDOW_HEIGHT * 2 ),
-            typelib::coord2Int_t(
-                WINDOW_WIDTH + THICKNESS / 2 - SHIFT,
-                WINDOW_HEIGHT / 2
-            ),
-            typelib::coord2Int_t::ZERO()
-        ) );
-        mBorderSet.push_back( std::move( right ) );
-
-        std::unique_ptr< Border >  left( new BoxBorder(
-            this->shared_from_this(),
-            "",
-            typelib::size2Int_t( 1, 1 ),
-            typelib::size2Int_t( THICKNESS, WINDOW_HEIGHT * 2 ),
-            typelib::coord2Int_t( -THICKNESS / 2 - SHIFT, WINDOW_HEIGHT / 2 ),
-            typelib::coord2Int_t::ZERO()
-        ) );
-        mBorderSet.push_back( std::move( left ) );
     }
+#endif
 
 
     // фон
+#if 1
     mBackground.reset();
     {
         const auto& about = mLevel->mAboutBackground;
@@ -196,9 +152,11 @@ World::loadNextLevel( size_t startLevel ) {
             typelib::coord2Int_t::ZERO()
         ) );
     }
+#endif
 
 
     // платформа
+#if 1
     mPlatformSet.clear();
     {
         std::unique_ptr< Platform >  platform;
@@ -210,8 +168,10 @@ World::loadNextLevel( size_t startLevel ) {
                 about.sprite,
                 size,
                 size,
-                typelib::coord2Int_t( WINDOW_WIDTH / 2,  WINDOW_HEIGHT - size.y * 2 ),
-                typelib::coord2Int_t::ZERO()
+                typelib::coord2Int_t(
+                    WINDOW_WIDTH / 2,
+                    WINDOW_HEIGHT - size.y * 2
+                )
             ) );
 
         } else {
@@ -225,22 +185,24 @@ World::loadNextLevel( size_t startLevel ) {
     }
     ASSERT( (mPlatformSet.size() == 1)
         && "Ожидается единственная платформа." );
+#endif
 
 
     // ракетка
+#if 1
     mRacketSet.clear();
     {
         std::unique_ptr< Racket >  racket;
         const auto& about = mLevel->mAboutRacket;
         if (about.kind == "Sphere") {
+            // # Сама ракетка меньше размера спрайта.
+            const size_t radius = (32 - 12) / 2;
             racket = std::unique_ptr< Racket >( new SphereRacket(
                 this->shared_from_this(),
                 about.sprite,
                 typelib::size2Int_t( 32, 32 ),
-                // # Сама ракетка меньше размера спрайта.
-                (32 - 8) / 2,
-                typelib::coord2Int_t( WINDOW_WIDTH / 2,  WINDOW_HEIGHT / 3 * 2 ),
-                typelib::coord2Int_t::ZERO()
+                radius,
+                mStartCoordRacket
             ) );
 
         } else {
@@ -254,92 +216,43 @@ World::loadNextLevel( size_t startLevel ) {
     }
     ASSERT( (mRacketSet.size() == 1)
         && "Ожидается единственная ракетка." );
+#endif
 
 
     // контейнеры и останки
     // # Контейнеры и останки декларированы на одной карте.
+#if 1
     mContainerSet.clear();
     mRemainsSet.clear();
-    typelib::coord2_t  coord( 0, 0 );
-    const auto& needVisualSize = mLevel->mCell;
+    typelib::coord2Int_t  coord( 0, 0 );
     for (auto itr = mLevel->mMap.cbegin();
          itr != mLevel->mMap.cend();  ++itr
     ) {
         const Level::row_t&  row = *itr;
         // # Допустимо указывать пустую строку.
         for (auto rtr = row.cbegin(); rtr != row.cend(); ++rtr) {
-            const Level::sign_t  sign = *rtr;
-#ifdef _DEBUG
-            //CONSOLE << "Cell " << coord << " '" << sign << "'" << std::endl;
-#endif
+            const sign_t sign = *rtr;
             // # Символ '.' означает "пустая ячейка".
             if (sign != '.') {
-                const auto ftr = mLevel->mAboutSetSign.find( sign );
-                ASSERT( (ftr != mLevel->mAboutSetSign.cend())
-                    && "Информация о контейнере отсутствует." );
-                const Level::AboutSet&  about = ftr->second;
-                std::unique_ptr< Container >  container;
-                std::unique_ptr< Remains >    remains;
-                if (about.kind == "Cube") {
-                    container = std::unique_ptr< Container >( new CubeContainer(
-                        this->shared_from_this(),
-                        about.sprite,
-                        needVisualSize,
-                        mLevel->mCell.x,
-                        coord,
-                        typelib::coord2Int_t::ZERO()
-                    ) );
-
-                } else if (about.kind == "Sphere") {
-                    container = std::unique_ptr< Container >( new SphereContainer(
-                        this->shared_from_this(),
-                        about.sprite,
-                        needVisualSize,
-                        mLevel->mCell.x / 2,
-                        coord,
-                        typelib::coord2Int_t::ZERO()
-                    ) );
-
-                } else if (about.kind == "Remains") {
-                    remains = std::unique_ptr< Remains >( new Remains(
-                        about.sprite,
-                        needVisualSize,
-                        coord,
-                        typelib::coord2Int_t::ZERO()
-                    ) );
-
-                } else {
-                    ASSERT( false
-                        && "Вид контейнера не распознан." );
-                }
-
-                ASSERT( ( container || remains || (sign == '.') )
-                    && "Подходящий образ не создан." );
-
-                if ( container ) {
-                    mContainerSet.push_back( std::move( container ) );
-
-                } else if ( remains ) {
-                    mRemainsSet.push_back( std::move( remains ) );
-                }
-
-            } // if (sign != '.')
+                incarnate( sign, coord );
+            }
 
             coord.x += mLevel->mCell.x;
-            ASSERT( ((coord.x <= mMaxCoord.x) && (coord.x >= mMinCoord.x))
+            ASSERT( ((coord.x <= WINDOW_WIDTH) && (coord.x >= 0))
                 && "Попытка поместить элемент за пределами уровня (ширина)." );
 
         } // for (auto rtr = ...
 
         coord.x = 0;
         coord.y += mLevel->mCell.y;
-        ASSERT( ((coord.y <= mMaxCoord.y) && (coord.y >= mMinCoord.y))
+        ASSERT( ((coord.y <= WINDOW_HEIGHT) && (coord.y >= 0))
             && "Попытка поместить элемент за пределами уровня (высота)." );
 
     } // for (auto itr = ...
 
     ASSERT( !mContainerSet.empty()
         && "Уровень не должен быть пустым." );
+#endif
 
 
     return mLevel;
@@ -348,11 +261,20 @@ World::loadNextLevel( size_t startLevel ) {
 
 
 
-void
-World::physicsBodyLeaveWorld( const NewtonBody* b,  int threadIndex ) {
-    // удаляем физический образ
-    NewtonWorld* nw = NewtonBodyGetWorld( b );
-    NewtonDestroyBody( nw, b );
+World::Statistics
+World::statistics() const {
+
+    Statistics st = {};
+    for (auto ctr = mContainerSet.cbegin(); ctr != mContainerSet.cend(); ++ctr ) {
+        const Container* container = ctr->get();
+        if (container->sign == container->next) {
+            ++st.indestructible;
+        } else {
+            ++st.destructible;
+        }
+    }
+
+    return st;
 }
 
 
@@ -360,8 +282,8 @@ World::physicsBodyLeaveWorld( const NewtonBody* b,  int threadIndex ) {
 
 bool
 World::EventMain() {
-	EventDraw();
-	return true;
+    EventDraw();
+    return true;
 }
 
 
@@ -375,10 +297,10 @@ World::EventDraw() {
     // вычисляем и показываем FPS
     // # Ограничение на FPS поставлено при создании окна - см. World().
     static auto lastTime = World::currentTime();
-	const auto currentTime = World::currentTime();
-	auto deltaTime = currentTime - lastTime;
+    const auto currentTime = World::currentTime();
+    auto deltaTime = currentTime - lastTime;
     // ждём: окно приложения могут перетаскивать
-	if (deltaTime > 1000) { deltaTime = 1000; }
+    if (deltaTime > 1000) { deltaTime = 1000; }
     // 'deltaTime' можно использовать для корректного тайминга
     lastTime = currentTime;
     const size_t fps = calcFPS( deltaTime );
@@ -394,7 +316,15 @@ World::EventDraw() {
     // физика
     {
         movePlatformToDestination();
-        NewtonUpdate( mPhysics.get(),  1.0f / 60.0f );
+
+        mImpactCount = 0;
+        mContactPointCount = 0;
+
+        static const float timeStep     = 1.0f / 60.0f;
+        static const size_t velocityItr = 16;
+        static const size_t positionItr = 12;
+        mPhysics->Step( timeStep, velocityItr, positionItr );
+        //mPhysics->ClearForces();
     }
 
     // графика
@@ -421,8 +351,50 @@ World::EventDraw() {
     }
 
 
+    // анализ изменений
+    {
+        // просмотрим собранный список столкновений
+        if (mImpactCount > 0) {
+            // могут быть дубликаты
+            std::sort( mImpactSet,  mImpactSet + mImpactCount );
+            for (size_t i = 0; i < mImpactCount; ) {
+                b2Body* body = mImpactSet[ i++ ];
+                ASSERT( body
+                    && "Получено разрушенное физ. тело." );
+                while ( (i < mImpactCount) && (mImpactSet[ i ] == body) ) {
+                    ++i;
+                }
+                reincarnateOrDie( body );
+                // уровень пройден?
+                if ( completed() ) {
+                    levelCompletedAction();
+                    MainBreak();
+                }
+
+            } // for (size_t i = 0; i < mImpactCount; )
+
+        } // if (mImpactCount > 0)
+    }
+
+
+    // синхронизация
+    {
+        for (auto ptr = mPlatformSet.cbegin(); ptr != mPlatformSet.cend(); ++ptr ) {
+            ( *ptr )->sync();
+        }
+
+        for (auto rtr = mRacketSet.cbegin(); rtr != mRacketSet.cend(); ++rtr ) {
+            ( *rtr )->sync();
+            // проверим позицию ракетки
+            if ( out( *rtr->get() ) ) {
+                racketOutAction();
+            }
+        }
+    }
+
+
     BlitWrite( 0, 0, mVisual );
-	PageFlip();
+    PageFlip();
 }
 
 
@@ -473,12 +445,84 @@ World::EventKeyboard( int keycode, char charcode, bool press ) {
 
     using namespace prcore;
 
-    if ((keycode == KEYCODE_SPACE) && press) {
-		pushRacket();
+    if ((keycode == KEYCODE_UP) && press) {
+        pushRacket( true );
+
+    } else if ((keycode == KEYCODE_SPACE) && press) {
+        pushRacket( false );
 
     } else if ((keycode == KEYCODE_ESC) && press) {
-		MainBreak();
+        MainBreak();
     }
+}
+
+
+
+
+void
+World::PreSolve(
+    b2Contact*         contact,
+    const b2Manifold*  oldManifold
+) {
+	const b2Manifold* manifold = contact->GetManifold();
+	if (manifold->pointCount == 0) {
+		return;
+	}
+
+	b2Fixture* fixtureA = contact->GetFixtureA();
+    const auto typeA = fixtureA->GetBody()->GetType();
+	b2Fixture* fixtureB = contact->GetFixtureB();
+    const auto typeB = fixtureB->GetBody()->GetType();
+
+    /* - @test
+	b2PointState  stateA[ b2_maxManifoldPoints ];
+    b2PointState  stateB[ b2_maxManifoldPoints ];
+	b2GetPointStates( stateA, stateB, oldManifold, manifold );
+    */
+
+	b2WorldManifold  worldManifold;
+	contact->GetWorldManifold( &worldManifold );
+	for (size_t i = 0;
+        (i < static_cast< size_t >( manifold->pointCount ))
+          && (mContactPointCount < MAX_CONTACT_POINT);
+        ++i
+    ) {
+        /* - @test
+		ContactPoint* cp = mContactPointSet + mContactPointCount;
+		cp->a = fixtureA;
+		cp->b = fixtureB;
+		cp->position = worldManifold.points[ i ];
+		cp->normal = worldManifold.normal;
+		cp->state = stateB[ i ];
+		++mContactPointCount;
+        */
+
+        // собираем статические элементы отдельно
+        // позже проанализируем список и изменим их
+        if ( (mImpactCount < MAX_IMPACT) && (typeA == b2_staticBody) ) {
+            mImpactSet[ mImpactCount ] =
+                static_cast< b2Body* >( fixtureA->GetBody() );
+            ++mImpactCount;
+        }
+        if ( (mImpactCount < MAX_IMPACT) && (typeB == b2_staticBody) ) {
+            mImpactSet[ mImpactCount ] =
+                static_cast< b2Body* >( fixtureB->GetBody() );
+            ++mImpactCount;
+        }
+
+	} // for (size_t i = 0; ...
+}
+
+
+
+
+void
+World::PostSolve(
+    const b2Contact*         contact,
+    const b2ContactImpulse*  impulse
+) {
+    NOT_USED( contact );
+    NOT_USED( impulse );
 }
 
 
@@ -487,18 +531,18 @@ World::EventKeyboard( int keycode, char charcode, bool press ) {
 size_t
 World::calcFPS( size_t frameTime ) {
 
-	static size_t fpsResult  = 0;
-	static size_t fpsCounter = 0;
-	static size_t totalTime  = 0;
-	
-	totalTime += frameTime;
-	if (totalTime >= 1000) {
-		fpsResult = fpsCounter + 1;
-		fpsCounter = totalTime = 0;
-	}
-	++fpsCounter;
+    static size_t fpsResult  = 0;
+    static size_t fpsCounter = 0;
+    static size_t totalTime  = 0;
+    
+    totalTime += frameTime;
+    if (totalTime >= 1000) {
+        fpsResult = fpsCounter + 1;
+        fpsCounter = totalTime = 0;
+    }
+    ++fpsCounter;
 
-	return fpsResult;
+    return fpsResult;
 }
 
 
@@ -509,8 +553,8 @@ World::setPlatformDestination( int x,  int y ) {
 
     auto& platform = mPlatformSet.front();
     // точка назначения - по центру платформы
-    platform->mDestination.x = x - platform->needVisualSize.x / 2;
-    platform->mDestination.y = y - platform->needVisualSize.y / 2;
+    platform->mDestination.x = x;
+    platform->mDestination.y = y;
 }
 
 
@@ -521,22 +565,169 @@ World::movePlatformToDestination() {
 
     // # Платформа перемещается вдоль оси OX.
     auto& platform = mPlatformSet.front();
-    const auto velocityX = platform->velocity().x;
-    const float distanceX = platform->mDestination.x - platform->coord().x;
-    const float forceX = distanceX * 10.0f - velocityX * 100.0f;
-    platform->applyForce( typelib::vector2_t( forceX, 0 ) );
+    const auto velocityX = platform->linearVelocity().x;
+    const float distanceX = static_cast< float >(
+        platform->mDestination.x - platform->visualCoord().x
+    );
+    const float nvx = distanceX;
+    platform->body()->SetLinearVelocity( b2Vec2( nvx, 0 ) );
 }
 
 
 
 
 void
-World::pushRacket() {
+World::pushRacket( bool always ) {
 
     auto& racket = mRacketSet.front();
-    //const auto force = typelib::vector2_t( 5000, -5000 ) * racket->mass();
-    const auto force = typelib::vector2_t( 0, -5000 ) * racket->mass();
-    racket->pushRacket( force );
+
+    // ускорим ракетку только если она очень медленная
+    const auto velocity = racket->linearVelocity().length();
+    if ( !always && (velocity > 20.0f) ) {
+        return;
+    }
+
+    const float mass = racket->mass();
+    const float force =
+        mass * static_cast< float >( std::rand() % 3000 + 2000 );
+    const float angle =
+        static_cast< float >( std::rand() % 180 ) * 3.1416f / 180.0f;
+    const auto fv =
+        typelib::vector2_t( cos( angle ),  -sin( angle ) ) * force;
+    racket->pushRacket( fv );
+}
+
+
+
+
+void
+World::incarnate( sign_t sign,  const typelib::coord2Int_t& coord ) {
+
+    ASSERT( mLevel
+        && "Уровень должен быть загружен до вызова этого метода." );
+
+    const auto ftr = mLevel->mAboutSetSign.find( sign );
+    ASSERT( (ftr != mLevel->mAboutSetSign.cend())
+        && "Информация о контейнере отсутствует." );
+    const AboutSet&  about = ftr->second;
+    const auto& needVisualSize = mLevel->mCell;
+
+    std::unique_ptr< Container >  container = Container::valueOf(
+        this->shared_from_this(),
+        sign,
+        about,
+        mLevel->mCell,
+        needVisualSize,
+        coord
+    );
+
+    std::unique_ptr< Remains >  remains = Remains::valueOf(
+        about,
+        needVisualSize,
+        coord
+    );
+
+    ASSERT( ( container || remains )
+        && "Подходящий образ не создан." );
+
+    if ( container ) {
+        mContainerSet.push_back( std::move( container ) );
+
+    } else if ( remains ) {
+        mRemainsSet.push_back( std::move( remains ) );
+    }
+}
+
+
+
+
+bool
+World::completed() const {
+    const auto st = statistics();
+    return (st.destructible == 0);
+}
+
+
+
+
+bool
+World::out( const Racket& racket ) const {
+    const auto c = racket.coord();
+    static const int B = 100;
+    return (c.x < -B) || (c.x > WINDOW_WIDTH  + B)
+        || (c.y < -B) || (c.y > WINDOW_HEIGHT + B);
+}
+
+
+
+
+void
+World::reincarnateOrDie( b2Body* body ) {
+
+    for (auto ctr = mContainerSet.begin();
+         ctr != mContainerSet.end();  ++ctr
+    ) {
+        const auto b2 = ( *ctr )->body();
+        if (b2 != body) {
+            continue;
+        }
+
+        // смотрим, должен ли этот элемент исчезнуть окончательно или
+        // на его месте надо создать нечто новое
+        const Container* container = ctr->get();
+        const bool destroy =
+            (container->next == 0) || (container->sign != container->next);
+        const bool create =
+            (container->next != 0);
+        const sign_t sign = container->next;
+        const typelib::coord2Int_t coord = container->coord();
+        if ( destroy ) {
+            // уничтожаем текущий
+            mContainerSet.erase( ctr );
+        }
+        if ( create ) {
+            // создаём на его месте новое
+            incarnate( sign, coord );
+        }
+
+        // элементы в списке уникальны
+        break;
+
+    } // for (auto ctr = ...
+}
+
+
+
+
+void
+World::levelCompletedAction() {
+
+    const Message message( "message/level-completed.png" );
+    message.draw( mVisual );
+    BlitWrite( 0, 0, mVisual );
+    PageFlip();
+
+    boost::this_thread::sleep( boost::posix_time::seconds( 2 ) );
+}
+
+
+
+
+void
+World::racketOutAction() {
+
+    const Message message( "message/racket-out.png" );
+    message.draw( mVisual );
+    BlitWrite( 0, 0, mVisual );
+    PageFlip();
+
+    boost::this_thread::sleep( boost::posix_time::seconds( 2 ) );
+
+    // вернём ракетку
+    auto& racket = mRacketSet.front();
+    racket->coord( mStartCoordRacket );
+    racket->body()->SetLinearVelocity( b2Vec2_zero );
+    racket->body()->SetAngularVelocity( 0.0f );
 }
 
 

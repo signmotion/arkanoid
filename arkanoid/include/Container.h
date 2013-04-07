@@ -1,7 +1,8 @@
 #pragma once
 
 #include "configure.h"
-#include "NDIncarnate.h"
+#include "structure.h"
+#include "B2DIncarnate.h"
 #include "PPIncarnate.h"
 
 
@@ -13,20 +14,46 @@ namespace arkanoid {
 */
 class Container :
     public PPIncarnate,
-    public NDIncarnate
+    public B2DIncarnate
 {
 public:
+    /**
+    * Метка этого контейнера и то, чем он станет после разрушения.
+    */
+    const sign_t  sign;
+    const sign_t  next;
+
+
+
+
+public:
+    /**
+    * Круглый контейнер.
+    */
     Container(
         std::shared_ptr< World >,
-        const std::string&           sprite,
-        const typelib::size2Int_t&   needVisualSize,
-        NewtonCollision*             collision,
-        float                        mass,
-        const typelib::coord2_t&     coord,
-        const typelib::coord2_t&     rotation,
-        const typelib::vector2_t&    momentInertia,
-        std::unique_ptr< Material > =
-            std::move( Material::valueOf() )
+        sign_t,
+        sign_t                      next,
+        const std::string&          sprite,
+        const typelib::size2Int_t&  needVisualSize,
+        size_t                      radius,
+        float                       density,
+        const typelib::coord2_t&    coord
+    );
+
+
+    /**
+    * Полигональный контейнер.
+    */
+    Container(
+        std::shared_ptr< World >,
+        sign_t,
+        sign_t                      next,
+        const std::string&          sprite,
+        const typelib::size2Int_t&  needVisualSize,
+        const polygon_t&,
+        float                       density,
+        const typelib::coord2_t&    coord
     );
 
 
@@ -35,45 +62,23 @@ public:
 
 
 
-    /**
-    * @virtual NDIncarnate
-    */
-    virtual void applyForceAndTorque();
-
-    virtual void setTransform( const dgMatrix&  matrix );
-
-    virtual void contactProcess(
-        NDIncarnate*        other,
-        const NewtonJoint*  contactJoint
-    );
-
-};
-
-
-
-
-
-
-
-
-/**
-* Контейнер в форме куба.
-*/
-class CubeContainer :
-    public Container
-{
-public:
-    CubeContainer(
+    static std::unique_ptr< Container >  valueOf(
         std::shared_ptr< World >,
-        const std::string&          sprite,
+        sign_t,
+        const AboutSet&,
         const typelib::size2Int_t&  needVisualSize,
-        size_t                      side,
-        const typelib::coord2_t&    coord,
-        const typelib::coord2_t&    rotation
+        const typelib::size2Int_t&  cell,
+        const typelib::coord2_t&
     );
 
 
-    virtual ~CubeContainer();
+
+
+    /**
+    * @virtual B2DIncarnate
+    */
+    virtual void sync();
+
 };
 
 
@@ -92,15 +97,44 @@ class SphereContainer :
 public:
     SphereContainer(
         std::shared_ptr< World >,
+        sign_t,
+        sign_t                      next,
         const std::string&          sprite,
         const typelib::size2Int_t&  needVisualSize,
         size_t                      radius,
-        const typelib::coord2_t&    coord,
-        const typelib::coord2_t&    rotation
+        const typelib::coord2_t&    coord
     );
 
 
     virtual ~SphereContainer();
+};
+
+
+
+
+
+
+
+
+/**
+* Контейнер в форме куба.
+*/
+class CubeContainer :
+    public Container
+{
+public:
+    CubeContainer(
+        std::shared_ptr< World >,
+        sign_t,
+        sign_t                      next,
+        const std::string&          sprite,
+        const typelib::size2Int_t&  needVisualSize,
+        int                         side,
+        const typelib::coord2_t&    coord
+    );
+
+
+    virtual ~CubeContainer();
 };
 
 

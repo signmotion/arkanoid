@@ -121,6 +121,13 @@ struct CoordT {
     {
     }
 
+    inline CoordT< Number >& operator=( const CoordT< Number >& c ) {
+        this->x = c.x;
+        this->y = c.y;
+        this->z = c.z;
+        return *this;
+    }
+
     /**
     * @return Центр.
     */

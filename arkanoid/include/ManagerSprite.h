@@ -40,9 +40,17 @@ public:
     * @return Спрайт или nullptr, если спрайт загрузить на удалось.
     */
     prcore::Bitmap* sprite(
-        const typelib::size2Int_t&  needVisualSize,
-        const pathSprite_t&
+        const pathSprite_t&,
+        const typelib::size2Int_t&  needVisualSize = typelib::size2Int_t::ZERO()
     );
+
+
+
+
+    /**
+    * @return Размер спрайта или (0, 0), если спрайт не найден.
+    */
+    typelib::size2Int_t sizeSprite( const pathSprite_t& ) const;
 
 
 
@@ -52,8 +60,8 @@ private:
     * Загружает спрайт.
     */
     prcore::Bitmap* loadSprite(
-        const typelib::size2Int_t&  needVisualSize,
-        const pathSprite_t&
+        const pathSprite_t&,
+        const typelib::size2Int_t&  needVisualSize = typelib::size2Int_t::ZERO()
     );
 
 

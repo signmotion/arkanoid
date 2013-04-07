@@ -7,31 +7,92 @@ namespace arkanoid {
 
 
 Racket::Racket(
-    std::shared_ptr< World >     world,
-    const std::string&           sprite,
-    const typelib::size2Int_t&   needVisualSize,
-    NewtonCollision*             collision,
-    float                        mass,
-    const typelib::coord2_t&     coord,
-    const typelib::coord2_t&     rotation,
-    const typelib::vector2_t&    momentInertia,
-    std::unique_ptr< Material >  material
+    std::shared_ptr< World >    world,
+    const std::string&          sprite,
+    const typelib::size2Int_t&  needVisualSize,
+    size_t                      radius,
+    float                       density,
+    const typelib::coord2_t&    coord
 ) :
-    PPIncarnate(
-        coord,
-        sprite,
-        needVisualSize
-    ),
-    NDIncarnate(
-        world,
-        collision,
-        mass,
-        coord,
-        rotation,
-        momentInertia,
-        std::move( material )
-    )
+    PPIncarnate( sprite, coord, needVisualSize ),
+    B2DIncarnate( world )
 {
+    ASSERT( (radius > 0.0f)
+        && "Для ракетки необходимо указать радиус." );
+    ASSERT( (density > 0.0f)
+        && "Плотность ракетки должна быть указана." );
+
+    b2CircleShape   shape;
+    shape.m_radius = static_cast< float >( radius );
+
+    b2FixtureDef fd;
+    fd.shape = &shape;
+	fd.density = density;
+	fd.friction = 0.0f;
+    fd.restitution = 1.0f;
+
+	b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.bullet = true;
+    // # Координаты задаются в метрах.
+    const auto pc = coord;
+	bd.position.Set( pc.x, pc.y );
+
+    B2DIncarnate::init( bd, fd );
+}
+
+
+
+
+Racket::Racket(
+    std::shared_ptr< World >    world,
+    const std::string&          sprite,
+    const typelib::size2Int_t&  needVisualSize,
+    const polygon_t&            polygon,
+    float                       density,
+    const typelib::coord2_t&    coord
+) :
+    PPIncarnate( sprite, coord, needVisualSize ),
+    B2DIncarnate( world )
+{
+    const size_t n = polygon.size();
+    {
+        ASSERT( (polygon.front() != polygon.back())
+            && "Вершины ракетки не должны замыкаться: замыкание построят здесь." );
+#ifdef _DEBUG
+        //std::unique( polygon.begin(), polygon.end() );
+        //ASSERT( (n == polygon.size())
+        //    && "Вершины ракетки не должны повторяться." );
+#endif
+        ASSERT( (n >= 3)
+            && "Ракетка должна состоять не менее чем из трёх вершин." );
+        ASSERT( (density > 0.0f)
+            && "Плотность ракетки должна быть указана." );
+    }
+
+
+    b2PolygonShape shape;
+    std::unique_ptr< b2Vec2 >  vertices( new b2Vec2[ n ] );
+    for (auto itr = polygon.cbegin(); itr != polygon.cend(); ++itr) {
+        const size_t i = std::distance( polygon.cbegin(), itr );
+        vertices.get()[ i ].Set( itr->x, itr->y );
+    }
+    shape.Set( vertices.get(), n );
+
+    b2FixtureDef fd;
+	fd.shape = &shape;
+	fd.density = density;
+	fd.friction = 0.0f;
+    fd.restitution = 1.0f;
+
+	b2BodyDef bd;
+    bd.type = b2_dynamicBody;
+    bd.bullet = true;
+    // # Координаты задаются в метрах.
+    const auto pc = coord;
+	bd.position.Set( pc.x, pc.y );
+
+    B2DIncarnate::init( bd, fd );
 }
 
 
@@ -44,29 +105,11 @@ Racket::~Racket() {
 
 
 void
-Racket::applyForceAndTorque() {
-    NDIncarnate::applyForceAndTorque();
-}
-
-
-
-
-
-void
-Racket::setTransform( const dgMatrix& matrix ) {
-    auto ndc = NDIncarnate::coord();
-    visualCoord( ndc.x, ndc.y );
-}
-
-
-
-
-
-void
-Racket::contactProcess(
-    NDIncarnate*        other,
-    const NewtonJoint*  contactJoint
-) {
+Racket::sync() {
+    const auto vc = coord();
+    visualCoord( vc.x, vc.y );
+    const auto a = rotation();
+    visualRotation( a );
 }
 
 
@@ -81,30 +124,17 @@ SphereRacket::SphereRacket(
     const std::string&          sprite,
     const typelib::size2Int_t&  needVisualSize,
     size_t                      radius,
-    const typelib::coord2_t&    coord,
-    const typelib::coord2_t&    rotation
+    const typelib::coord2_t&    coord
 ) :
     Racket(
         world,
         sprite,
         needVisualSize,
-        NewtonCreateSphere(
-            world->physics().get(),
-            static_cast< float >( radius ),
-            static_cast< float >( radius ),
-            static_cast< float >( radius ),
-            0, nullptr
-        ),
-        MASS_SPHERE_RACKET,
-        coord,
-        rotation,
-        // @see http://ru.wikipedia.org/wiki/%D0%A1%D0%BF%D0%B8%D1%81%D0%BE%D0%BA_%D0%BC%D0%BE%D0%BC%D0%B5%D0%BD%D1%82%D0%BE%D0%B2_%D0%B8%D0%BD%D0%B5%D1%80%D1%86%D0%B8%D0%B8
-        typelib::vector2_t( MASS_SPHERE_RACKET, MASS_SPHERE_RACKET ) *
-            2 * radius * radius / 5
+        radius,
+        DENSITY_SPHERE_RACKET,
+        coord
     )
 {
-    ASSERT( (radius > 0)
-        && "Радиус должен быть указан." );
 }
 
 

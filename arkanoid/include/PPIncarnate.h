@@ -19,16 +19,20 @@ class ManagerSprite;
 class PPIncarnate {
 public:
     const std::string          sprite;
+    const typelib::size2Int_t  originalVisualSize;
     const typelib::size2Int_t  needVisualSize;
 
 
 
 
 protected:
+    /**
+    * Если 'needVisualSize' не указан, будет взят оригинальный размер спрайта.
+    */
     PPIncarnate(
-        const typelib::coord2Int_t&,
-        const std::string&          sprite,
-        const typelib::size2Int_t&  needVisualSize
+        const std::string&           sprite,
+        const typelib::coord2Int_t&  vc,
+        const typelib::size2Int_t&   needVisualSize = typelib::size2Int_t::ZERO()
     );
 
 
@@ -39,7 +43,7 @@ protected:
 
 public:
     /**
-    * Отображает спрайт для элемента.
+    * Отображает спрайт для элемента. Показ отложен.
     */
     virtual void draw( prcore::Bitmap& context ) const;
 
@@ -112,11 +116,31 @@ public:
 
 
 
+    /**
+    * @return Размер спрайта.
+    */
+    static typelib::size2Int_t  sizeSprite( const std::string&  sprite );
+
+
+
+
+    /**
+    * @return Координаты для позиционирования спрайта по центру.
+    */
+    static typelib::coord2Int_t  centerSprite( const std::string&  sprite );
+
+
+
+
 private:
     typelib::coord2Int_t  mCoord;
     float                 mRotation;
     float                 mAlpha;
 
+
+
+
+protected:
     static std::unique_ptr< ManagerSprite >  mManagerSprite;
 };
 

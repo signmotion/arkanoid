@@ -1,7 +1,7 @@
 #pragma once
 
 #include "configure.h"
-#include "NDIncarnate.h"
+#include "B2DIncarnate.h"
 #include "PPIncarnate.h"
 
 
@@ -10,20 +10,32 @@ namespace arkanoid {
 
 class Racket :
     public PPIncarnate,
-    public NDIncarnate
+    public B2DIncarnate
 {
 public:
+    /**
+    * Круглая ракетка.
+    */
     Racket(
         std::shared_ptr< World >,
-        const std::string&           sprite,
-        const typelib::size2Int_t&   needVisualSize,
-        NewtonCollision*             collision,
-        float                        mass,
-        const typelib::coord2_t&     coord,
-        const typelib::coord2_t&     rotation,
-        const typelib::vector2_t&    momentInertia,
-        std::unique_ptr< Material > =
-            std::move( Material::valueOf() )
+        const std::string&          sprite,
+        const typelib::size2Int_t&  needVisualSize,
+        size_t                      radius,
+        float                       density,
+        const typelib::coord2_t&    coord
+    );
+
+
+    /**
+    * Полигональная ракетка.
+    */
+    Racket(
+        std::shared_ptr< World >,
+        const std::string&          sprite,
+        const typelib::size2Int_t&  needVisualSize,
+        const polygon_t&,
+        float                       density,
+        const typelib::coord2_t&    coord
     );
 
 
@@ -32,24 +44,17 @@ public:
 
 
 
-    inline void pushRacket( const typelib::vector2_t&  force ) {
-        applyAddForce( force );
-    }
-
-
-
-
     /**
-    * @virtual NDIncarnate
+    * @virtual B2DIncarnate
     */
-    virtual void applyForceAndTorque();
+    virtual void sync();
 
-    virtual void setTransform( const dgMatrix&  matrix );
 
-    virtual void contactProcess(
-        NDIncarnate*        other,
-        const NewtonJoint*  contactJoint
-    );
+
+
+    inline void pushRacket( const typelib::vector2_t&  force ) {
+        applyForce( force );
+    }
 
 };
 
@@ -72,8 +77,7 @@ public:
         const std::string&          sprite,
         const typelib::size2Int_t&  needVisualSize,
         size_t                      radius,
-        const typelib::coord2_t&    coord,
-        const typelib::coord2_t&    rotation
+        const typelib::coord2_t&    coord
     );
 
 

@@ -25,7 +25,6 @@
 #define WIN32_LEAN_AND_MEAN
 
 
-
 // Отключим вредный макрос в WinDef.h
 #define NOMINMAX
 
@@ -53,6 +52,7 @@
 #include <tchar.h>
 #include <typeinfo>
 #include <unordered_map>
+#include <unordered_set>
 #include <windows.h>
 
 #include <boost/assign.hpp>
@@ -70,10 +70,7 @@
 #include <GL/gl.h>
 
 
-#include <Newton.h>
-#include <dgMatrix.h>
-#include <dgQuaternion.h>
-#include <dgVector.h>
+#include <Box2D/Box2D.h>
 
 
 #include <typelib/include/coord2.h>

@@ -9,7 +9,7 @@ namespace arkanoid {
 /**
 * Количество контейнеров по ширине уровня и размер ячейки по умолчанию.
 */
-static const size_t COUNT_CONTAINER = 20;
+static const size_t COUNT_CONTAINER = 20 + 2;
 static const size_t CELL_SIZE = 32;
 
 
@@ -36,14 +36,14 @@ static const std::string PATH_MEDIA = "media";
 
 
 /**
-* Массы некоторых элементов игры, кг.
+* Плотности некоторых элементов игры, кг / м3.
 */
-static const float MASS_CAPSULE_PLATFORM = 200.0f;
+static const float DENSITY_CAPSULE_PLATFORM = 1000.0f;
 
-static const float MASS_SPHERE_RACKET    = 20.0f;
+static const float DENSITY_SPHERE_RACKET    = 3000.0f;
 
-static const float MASS_CUBE_CONTAINER   = 0.0f;
-static const float MASS_SPHERE_CONTAINER = 0.0f;
+static const float DENSITY_CUBE_CONTAINER   = 0.0f;
+static const float DENSITY_SPHERE_CONTAINER = 0.0f;
 
 
 
@@ -51,9 +51,9 @@ static const float MASS_SPHERE_CONTAINER = 0.0f;
 /**
 * Для отладки.
 */
-#undef ASSERT
 #define ASSERT(EXPR)   assert(EXPR);
 #define DASSERT(EXPR)  if (!(EXPR)) __debugbreak();
+#define NOT_USED(x)    ((void)(x))
 
 
 // @see Console

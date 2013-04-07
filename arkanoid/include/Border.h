@@ -1,7 +1,7 @@
 #pragma once
 
 #include "configure.h"
-#include "NDIncarnate.h"
+#include "B2DIncarnate.h"
 #include "PPIncarnate.h"
 
 
@@ -9,21 +9,13 @@ namespace arkanoid {
 
 
 class Border :
-    public PPIncarnate,
-    public NDIncarnate
+    public B2DIncarnate
 {
 public:
     Border(
         std::shared_ptr< World >,
-        const std::string&           sprite,
-        const typelib::size2Int_t&   needVisualSize,
-        NewtonCollision*             collision,
-        float                        mass,
-        const typelib::coord2_t&     coord,
-        const typelib::coord2_t&     rotation,
-        const typelib::vector2_t&    momentInertia,
-        std::unique_ptr< Material > =
-            std::move( Material::valueOf() )
+        const typelib::coord2_t&  a,
+        const typelib::coord2_t&  b
     );
 
 
@@ -33,17 +25,9 @@ public:
 
 
     /**
-    * @virtual NDIncarnate
+    * @virtual B2DIncarnate
     */
-    virtual void applyForceAndTorque();
-
-    virtual void setTransform( const dgMatrix&  matrix );
-
-    virtual void contactProcess(
-        NDIncarnate*        other,
-        const NewtonJoint*  contactJoint
-    );
-
+    virtual void sync();
 };
 
 
@@ -54,23 +38,20 @@ public:
 
 
 /**
-* Граница в форме кубоида.
+* Граница в форме линии.
 */
-class BoxBorder :
+class EdgeBorder :
     public Border
 {
 public:
-    BoxBorder(
+    EdgeBorder(
         std::shared_ptr< World >,
-        const std::string&          sprite,
-        const typelib::size2Int_t&  needVisualSize,
-        const typelib::size2Int_t&  size,
-        const typelib::coord2_t&    coord,
-        const typelib::coord2_t&    rotation
+        const typelib::coord2_t&  a,
+        const typelib::coord2_t&  b
     );
 
 
-    virtual ~BoxBorder();
+    virtual ~EdgeBorder();
 };
 
 

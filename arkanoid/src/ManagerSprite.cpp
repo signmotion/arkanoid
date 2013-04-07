@@ -19,10 +19,10 @@ ManagerSprite::~ManagerSprite() {
 
 prcore::Bitmap*
 ManagerSprite::sprite(
-    const typelib::size2Int_t&  needVisualSize,
-    const pathSprite_t&  path
+    const pathSprite_t&         path,
+    const typelib::size2Int_t&  needVisualSize
 ) {
-    const auto sprite = loadSprite( needVisualSize, path );
+    const auto sprite = loadSprite( path, needVisualSize );
     ASSERT( sprite
         && "Подходящий спрайт для элемента не найден." );
 
@@ -34,8 +34,8 @@ ManagerSprite::sprite(
 
 prcore::Bitmap*
 ManagerSprite::loadSprite(
-    const typelib::size2Int_t&  needVisualSize,
-    const pathSprite_t&  path
+    const pathSprite_t&         path,
+    const typelib::size2Int_t&  needVisualSize
 ) {
     using namespace prcore;
 
@@ -74,7 +74,9 @@ ManagerSprite::loadSprite(
         imagePtr =
             std::unique_ptr< Bitmap >( new Bitmap( path.c_str() ) );
         imagePtr->ReformatImage( PIXELFORMAT_ARGB8888 );
-        imagePtr->ResizeImage( needVisualSize.x, needVisualSize.y, true );
+        if (needVisualSize != typelib::size2Int_t::ZERO()) {
+            imagePtr->ResizeImage( needVisualSize.x, needVisualSize.y, true );
+        }
 
     } catch ( ... ) {
         // # Используемый SDK не работает корректно с разными палитрами. Поэтому,
@@ -92,6 +94,24 @@ ManagerSprite::loadSprite(
 #endif
 
     return ftr->second.get();
+}
+
+
+
+
+typelib::size2Int_t
+ManagerSprite::sizeSprite( const pathSprite_t& path ) const {
+
+    try {
+        prcore::Bitmap  s( path.c_str() );
+        return typelib::size2Int_t( s.GetWidth(), s.GetHeight() );
+
+    } catch ( ... ) {
+        // # Используемый SDK не работает корректно с разными палитрами. Поэтому,
+        //   следует убедиться, что спрайт сохранён в формате PNG, полноцвет. @todo
+        CONSOLE << "(!) Спрайт не найден или формат не поддерживается." << std::endl;
+        return typelib::size2Int_t::ZERO();
+    }
 }
 
 

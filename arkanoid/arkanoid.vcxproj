@@ -41,9 +41,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>V:\temp\$(ProjectName)\$(Solution)$(Configuration)\</IntDir>
-    <IncludePath>$(BOOST_ROOT);external/phrophecysdk/include;external/phrophecysdk/src/extlib/openexr/Half;external/typelib;external/newton-dynamics/coreLibrary_200/source/core;external/newton-dynamics/coreLibrary_200/source/newton;external/newton-dynamics/coreLibrary_200/source/physics;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST_ROOT)/stage/lib;external/phrophecysdk/lib/visual studio .net 2003;external/newton-dynamics/coreLibrary_200/projets/windows/project_vs2010/Win32/newton/debugDll MDd;external/newton-dynamics/coreLibrary_200/projets/windows/project_vs2010/Win32/core/debugDll MDd;external/newton-dynamics/coreLibrary_200/projets/windows/project_vs2010/Win32/physics/debugDll MDd;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(BOOST_ROOT);external/phrophecysdk/include;external/phrophecysdk/src/extlib/openexr/Half;external/Box2D;external/typelib;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_ROOT)/stage/lib;external/phrophecysdk/lib/visual studio .net 2003;external/Box2D/Build/vs2010/bin/Debug;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
     <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>V:\bin\$(ProjectName)\$(Solution)$(Configuration)\</OutDir>
+    <IntDir>V:\temp\$(ProjectName)\$(Solution)$(Configuration)\</IntDir>
+    <IncludePath>$(BOOST_ROOT);external/phrophecysdk/include;external/phrophecysdk/src/extlib/openexr/Half;external/Box2D;external/typelib;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_ROOT)/stage/lib;external/phrophecysdk/lib/visual studio .net 2003;external/Box2D/Build/vs2010/bin/Release;C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -54,14 +60,13 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
-      <FloatingPointModel>Precise</FloatingPointModel>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>prcore.lib;newton_d.lib;core.lib;physics.lib;ddraw.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>prcore.lib;Box2D.lib;ddraw.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
@@ -74,14 +79,25 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>prcore.lib;Box2D.lib;ddraw.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <SubSystem>NotSet</SubSystem>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy media\*.level V:\bin\arkanoid\Release\media\ /E /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Message.cpp" />
     <ClCompile Include="src\Background.cpp" />
     <ClCompile Include="src\Remains.cpp" />
     <ClCompile Include="src\Border.cpp" />
@@ -89,10 +105,8 @@
     <ClCompile Include="src\Racket.cpp" />
     <ClCompile Include="src\ManagerSprite.cpp" />
     <ClCompile Include="src\PPIncarnate.cpp" />
-    <ClCompile Include="src\CollidableMaterial.cpp" />
     <ClCompile Include="src\Container.cpp" />
-    <ClCompile Include="src\Material.cpp" />
-    <ClCompile Include="src\NDIncarnate.cpp" />
+    <ClCompile Include="src\B2DIncarnate.cpp" />
     <ClCompile Include="src\Level.cpp" />
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
@@ -100,18 +114,18 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Message.h" />
     <ClInclude Include="include\Background.h" />
     <ClInclude Include="include\Border.h" />
-    <ClInclude Include="include\CollidableMaterial.h" />
     <ClInclude Include="include\Container.h" />
     <ClInclude Include="include\configure.h" />
     <ClInclude Include="include\Console.h" />
     <ClInclude Include="include\Exception.h" />
     <ClInclude Include="include\stdafx.h" />
+    <ClInclude Include="include\structure.h" />
     <ClInclude Include="include\World.h" />
     <ClInclude Include="include\Level.h" />
-    <ClInclude Include="include\NDIncarnate.h" />
-    <ClInclude Include="include\Material.h" />
+    <ClInclude Include="include\B2DIncarnate.h" />
     <ClInclude Include="include\PPIncarnate.h" />
     <ClInclude Include="include\ManagerSprite.h" />
     <ClInclude Include="include\Platform.h" />

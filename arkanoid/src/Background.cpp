@@ -10,11 +10,7 @@ Background::Background(
     const typelib::size2Int_t&   needVisualSize,
     const typelib::coord2_t&     coord
 ) :
-    PPIncarnate(
-        coord,
-        sprite,
-        needVisualSize
-    )
+    PPIncarnate( sprite, coord, needVisualSize )
 {
 }
 
