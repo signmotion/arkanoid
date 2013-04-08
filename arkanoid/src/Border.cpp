@@ -11,7 +11,7 @@ Border::Border(
     const typelib::coord2_t&  a,
     const typelib::coord2_t&  b
 ) :
-    B2DIncarnate( world )
+    B2DIncarnate( world, 0, 0 )
 {
     ASSERT( (a != b)
         && "Координаты должны задавать отрезок, не точку." );
@@ -47,6 +47,22 @@ Border::~Border() {
 void
 Border::sync() {
     // # Статический. Не нуждается в синхронизации.
+}
+
+
+
+
+void
+Border::selfReaction( const std::string& event ) {
+    // # Не реагирует.
+}
+
+
+
+
+void
+Border::collisionReaction( const GE* ge ) {
+    // # Не реагирует.
 }
 
 

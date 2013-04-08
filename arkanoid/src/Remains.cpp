@@ -8,9 +8,11 @@ namespace arkanoid {
 Remains::Remains(
     const std::string&           sprite,
     const typelib::size2Int_t&   needVisualSize,
-    const typelib::coord2_t&     coord
+    const typelib::coord2_t&     coord,
+    const AboutRemains&          about
 ) :
-    PPIncarnate( sprite, coord, needVisualSize )
+    PPIncarnate( sprite, coord, needVisualSize ),
+    about( about )
 {
 }
 
@@ -25,7 +27,7 @@ Remains::~Remains() {
 
 std::unique_ptr< Remains >
 Remains::valueOf(
-    const AboutSet&             about,
+    const AboutRemains&         about,
     const typelib::size2Int_t&  needVisualSize,
     const typelib::coord2_t&    coord
 ) {
@@ -33,7 +35,8 @@ Remains::valueOf(
         return std::unique_ptr< Remains >( new Remains(
             about.sprite,
             needVisualSize,
-            coord
+            coord,
+            about
         ) );
     }
 

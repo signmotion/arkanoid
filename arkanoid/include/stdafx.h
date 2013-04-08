@@ -73,6 +73,9 @@
 #include <Box2D/Box2D.h>
 
 
+#include <irrKlang.h>
+
+
 #include <typelib/include/coord2.h>
 #include <typelib/include/file.h>
 #include <typelib/include/json.h>

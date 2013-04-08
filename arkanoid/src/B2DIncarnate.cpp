@@ -7,8 +7,11 @@ namespace arkanoid {
     
     
 B2DIncarnate::B2DIncarnate(
-    std::shared_ptr< World >  world
+    std::shared_ptr< World >  world,
+    sign_t  sign,
+    sign_t  next
 ) :
+    GE( sign, next ),
     mWorld( world ),
     mBody( nullptr )
 {
@@ -41,7 +44,7 @@ B2DIncarnate::init(
     mBody->CreateFixture( &fd );
     mBody->ResetMassData();
 
-    //mBody->SetUserData( this );
+    mBody->SetUserData( this );
 }
 
 

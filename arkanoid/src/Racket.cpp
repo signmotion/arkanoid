@@ -12,10 +12,12 @@ Racket::Racket(
     const typelib::size2Int_t&  needVisualSize,
     size_t                      radius,
     float                       density,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutRacket&          about
 ) :
     PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world )
+    B2DIncarnate( world, '*', '*' ),
+    about( about )
 {
     ASSERT( (radius > 0.0f)
         && "Для ракетки необходимо указать радиус." );
@@ -50,10 +52,12 @@ Racket::Racket(
     const typelib::size2Int_t&  needVisualSize,
     const polygon_t&            polygon,
     float                       density,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutRacket&          about
 ) :
     PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world )
+    B2DIncarnate( world, '*', '*' ),
+    about( about )
 {
     const size_t n = polygon.size();
     {
@@ -115,6 +119,32 @@ Racket::sync() {
 
 
 
+void
+Racket::selfReaction( const std::string& event ) {
+
+    ASSERT( !event.empty()
+        && "Событие для ракетки должно быть указано." );
+
+    if (event == "out") {
+        playNotEmpty( about.out.sound );
+
+    } else {
+        ASSERT( false
+            && "Событие для ракетки не известно." );
+    }
+}
+
+
+
+
+void
+Racket::collisionReaction( const GE* ge ) {
+    // # Не реагирует.
+}
+
+
+
+
 
 
 
@@ -124,7 +154,8 @@ SphereRacket::SphereRacket(
     const std::string&          sprite,
     const typelib::size2Int_t&  needVisualSize,
     size_t                      radius,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutRacket&          about
 ) :
     Racket(
         world,
@@ -132,7 +163,8 @@ SphereRacket::SphereRacket(
         needVisualSize,
         radius,
         DENSITY_SPHERE_RACKET,
-        coord
+        coord,
+        about
     )
 {
 }

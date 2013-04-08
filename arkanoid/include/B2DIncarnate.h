@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "configure.h"
+#include "GE.h"
 
 
 namespace arkanoid {
@@ -15,7 +15,9 @@ class World;
 *
 * @see http://box2d.org
 */
-class B2DIncarnate {
+class B2DIncarnate :
+    public GE
+{
 public:
     typedef std::vector< typelib::coord2_t >  polygon_t;
 
@@ -27,7 +29,9 @@ protected:
     * #! Метод init() должен быть обязательно вызван потомком.
     */
     B2DIncarnate(
-        std::shared_ptr< World >
+        std::shared_ptr< World >,
+        sign_t  sign,
+        sign_t  next
     );
 
 
@@ -52,6 +56,22 @@ public:
     * Синхронизирует визуальные характеристики элемента по физическим.
     */
     virtual void sync() = 0;
+
+
+
+
+    /**
+    * Играет реакцию элемента на событие.
+    */
+    virtual void selfReaction( const std::string& event ) = 0;
+
+
+
+
+    /**
+    * Играет реакцию столкновения элемента с другим элементом.
+    */
+    virtual void collisionReaction( const GE* ) = 0;
 
 
 

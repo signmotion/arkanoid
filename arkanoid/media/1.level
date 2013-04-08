@@ -5,22 +5,36 @@
 //   # Уровни описываются файлом в формате JSON.  Имя файла '*.level'.
 //   # Строки с лидирующим '//' игнорируются.
 //   # Используемый SDK не работает корректно с разными палитрами. Поэтому,
-//     следует убедиться, что спрайт сохранён в формате PNG, полноцвет. @todo
+//     следует убедиться, что спрайт сохранён в формате PNG + RGB. @todo
 
 "background": {
-    "sprite": "background/grass1.jpg"
+    "sprite": "background/grass1.jpg",
+    "load": {
+        "sound": "music/Five Armies.mp3"
+    }
 },
 
 
 "platform": {
     "kind":   "Capsule",
-    "sprite": "platform/capsule-128x16.png"
+    "sprite": "platform/capsule-128x16.png",
+    // # События, которые может отыграть платформа.
+    "collision": {
+        // # Метка '*' означает ракетку.
+        "*": {
+            "sound": "sound/kick-5.wav"
+        }
+    }
 },
 
 
 "racket": {
     "kind":   "Sphere",
-    "sprite": "dc/mon/animals/boulder_beetle_rolling0.png"
+    "sprite": "dc/mon/animals/boulder_beetle_rolling0.png",
+    // # События, которые может отыграть ракетка.
+    "out": {
+        "sound": "sound/splash.mp3"
+    }
 },
 
 
@@ -30,34 +44,55 @@
 
 // перечисление контейнеров (кирпичей) для построении уровня (см.  ниже)
 // # Контейнеры могут обозначаться любым символом ASCII, за
-//   исключением точки '.' и пробела ' '.
+//   исключением точки '.', пробела ' ' и звезды '*'.
 "set": {
     "0": {
         "kind":   "Cube",
         "sprite": "dc/dngn/wall/cobalt_stone12.png",
         // # Не разбиваемая стена.
-        "next": "0"
+        "next": "0",
+        // # События, которые может отыграть этот контейнер.
+        "collision": {
+            "*": {
+                "sound": "sound/kick-5.wav"
+            }
+        }
     },
+
     "1": {
         // # Вид контейнера определяется классами движка.
         "kind":   "Cube",
-        "sprite": "dc/dngn/wall/brick_brown7.png"
+        "sprite": "dc/dngn/wall/brick_brown7.png",
+        "destroy": {
+            "sound": "sound/dropping-big-heavy-rocks-2.wav"
+        }
     },
+
     "2": {
         "kind":   "Cube",
         "sprite": "dc/dngn/wall/brick_brown0.png",
         // # Некоторые контейнеры после попадания могут не исчезать, а
         //   превращаться в другие контейнеры.
-        "next": "1"
+        "next": "1",
+        "destroy": {
+            "sound": "sound/price-rock-crash.wav"
+        }
     },
 
     "{": {
         "kind":   "Cube",
-        "sprite": "dc/dngn/gate_closed_left.png"
+        "sprite": "dc/dngn/gate_closed_left.png",
+        "destroy": {
+            "sound": "sound/Balloon Popping.mp3"
+        }
     },
+
     "}": {
         "kind":   "Cube",
-        "sprite": "dc/dngn/gate_closed_right.png"
+        "sprite": "dc/dngn/gate_closed_right.png",
+        "destroy": {
+            "sound": "sound/Balloon Popping.mp3"
+        }
     }
 },
 

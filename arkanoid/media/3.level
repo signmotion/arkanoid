@@ -2,19 +2,30 @@
 
 
 "background": {
-    "sprite": "background/stone1.jpg"
+    "sprite": "background/stone1.jpg",
+    "load": {
+        "sound": "music/Exotic Battle.mp3"
+    }
 },
 
 
 "platform": {
     "kind":   "Capsule",
-    "sprite": "platform/capsule-128x16.png"
+    "sprite": "platform/capsule-128x16.png",
+    "collision": {
+        "*": {
+            "sound": "sound/kick-5.wav"
+        }
+    }
 },
 
 
 "racket": {
     "kind":   "Sphere",
-    "sprite": "dc/mon/animals/boulder_beetle_rolling0.png"
+    "sprite": "dc/mon/animals/boulder_beetle_rolling0.png",
+    "out": {
+        "sound": "sound/splash.mp3"
+    }
 },
 
 
@@ -25,57 +36,102 @@
     "0": {
         "kind":   "Cube",
         "sprite": "dc/dngn/wall/cobalt_stone12.png",
-        "next": "0"
+        "next": "0",
+        "collision": {
+            "*": {
+                "sound": "sound/kick-5.wav"
+            }
+        }
     },
+
     "1": {
         "kind":   "Cube",
-        "sprite": "dc/dngn/wall/brick_brown7.png"
+        "sprite": "dc/dngn/wall/brick_brown7.png",
+        "destroy": {
+            "sound": "sound/dropping-big-heavy-rocks-2.wav"
+        }
     },
+
     "2": {
         "kind":   "Cube",
         "sprite": "dc/dngn/wall/brick_brown0.png",
-        "next": "1"
+        "next": "1",
+        "destroy": {
+            "sound": "sound/price-rock-crash.wav"
+        }
     },
+
     "#": {
         "kind":   "Cube",
         "sprite": "dc/dngn/wall/crystal_wall10.png",
-        "next": "#"
+        "next": "#",
+        "collision": {
+            "*": {
+                "sound": "sound/hv-uzi.wav"
+            }
+        }
     },
 
     "/": {
         "kind":   "Cube",
-        "sprite": "dc/dngn/closed_door.png"
+        "sprite": "dc/dngn/closed_door.png",
+        "destroy": {
+            "sound": "sound/Balloon Popping.mp3"
+        }
     },
 
     "^": {
         "kind":   "Sphere",
         "sprite": "dc/mon/orc_warlord.png",
-        "next": "_"
+        "next": "_",
+        "destroy": {
+            "sound": "sound/iMac_Startup_Chime.mp3"
+        }
     },
+
     "k": {
         "kind":   "Sphere",
         "sprite": "dc/mon/orc_knight.png",
-        "next": "_"
+        "next": "_",
+        "destroy": {
+            "sound": "sound/Dragon Bite.mp3"
+        }
     },
+
     "o": {
         "kind":   "Sphere",
         "sprite": "dc/mon/orc.png",
-        "next": "_"
+        "next": "_",
+        "destroy": {
+            "sound": "sound/Dragon Bite.mp3"
+        }
     },
+
     "p": {
         "kind":   "Sphere",
         "sprite": "dc/mon/orc_priest.png",
-        "next": "_"
+        "next": "_",
+        "destroy": {
+            "sound": "sound/crash-boom.wav"
+        }
     },
+
     "s": {
         "kind":   "Sphere",
         "sprite": "dc/mon/orc_sorcerer.png",
-        "next": "_"
+        "next": "_",
+        "destroy": {
+            "sound": "sound/iMac_Startup_Chime.mp3"
+        }
     },
+
     "w": {
         "kind":   "Sphere",
         "sprite": "dc/mon/orc_warrior.png",
-        "next": "_"
+        "next": "_",
+        "destroy": {
+            "sound": "sound/Dragon Bite.mp3"
+        }
     },
 
     "_": {

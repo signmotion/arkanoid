@@ -6,7 +6,6 @@
 namespace arkanoid {
 
 
-class World;
 class ManagerSprite;
 
 
@@ -128,6 +127,16 @@ public:
     * @return Координаты для позиционирования спрайта по центру.
     */
     static typelib::coord2Int_t  centerSprite( const std::string&  sprite );
+
+
+
+
+    /**
+    * Освобождает память (удаляются все загруженные ранее спрайты).
+    *
+    * @see ManagerSound::play()
+    */
+    static void clear();
 
 
 

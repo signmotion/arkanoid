@@ -32,6 +32,14 @@ ManagerSprite::sprite(
 
 
 
+void
+ManagerSprite::clear() {
+    mKnownSprite.clear();
+}
+
+
+
+
 prcore::Bitmap*
 ManagerSprite::loadSprite(
     const pathSprite_t&         path,

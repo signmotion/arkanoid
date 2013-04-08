@@ -1,8 +1,10 @@
 #pragma once
 
 #include "configure.h"
+#include "structure.h"
 #include "B2DIncarnate.h"
 #include "PPIncarnate.h"
+#include "IRRKIncarnate.h"
 
 
 namespace arkanoid {
@@ -10,8 +12,20 @@ namespace arkanoid {
 
 class Platform :
     public PPIncarnate,
-    public B2DIncarnate
+    public B2DIncarnate,
+    public IRRKIncarnate
 {
+public:
+    /**
+    * Информация о платформе, полученная из файла декларации уровня.
+    *
+    * @todo fine Сократить конструктор: сейчас часть инфо дублируется.
+    */
+    const AboutPlatform  about;
+
+
+
+
 public:
     Platform(
         std::shared_ptr< World >,
@@ -19,7 +33,8 @@ public:
         const typelib::size2Int_t&  needVisualSize,
         const polygon_t&            polygon,
         float                       density,
-        const typelib::coord2_t&    coord
+        const typelib::coord2_t&    coord,
+        const AboutPlatform&
     );
 
 
@@ -32,6 +47,8 @@ public:
     * @virtual B2DIncarnate
     */
     virtual void sync();
+    virtual void selfReaction( const std::string& event );
+    virtual void collisionReaction( const GE* );
 
 
 
@@ -75,7 +92,8 @@ public:
         const std::string&          sprite,
         const typelib::size2Int_t&  needVisualSize,
         const typelib::size2Int_t&  size,
-        const typelib::coord2_t&    coord
+        const typelib::coord2_t&    coord,
+        const AboutPlatform&
     );
 
 

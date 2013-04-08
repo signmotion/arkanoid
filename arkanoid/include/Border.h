@@ -1,6 +1,7 @@
 #pragma once
 
 #include "configure.h"
+#include "structure.h"
 #include "B2DIncarnate.h"
 #include "PPIncarnate.h"
 
@@ -28,6 +29,9 @@ public:
     * @virtual B2DIncarnate
     */
     virtual void sync();
+    virtual void selfReaction( const std::string& event );
+    virtual void collisionReaction( const GE* );
+
 };
 
 

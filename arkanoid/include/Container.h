@@ -4,6 +4,7 @@
 #include "structure.h"
 #include "B2DIncarnate.h"
 #include "PPIncarnate.h"
+#include "IRRKIncarnate.h"
 
 
 namespace arkanoid {
@@ -14,14 +15,16 @@ namespace arkanoid {
 */
 class Container :
     public PPIncarnate,
-    public B2DIncarnate
+    public B2DIncarnate,
+    public IRRKIncarnate
 {
 public:
     /**
-    * Метка этого контейнера и то, чем он станет после разрушения.
+    * Информация о контейнере, полученная из файла декларации уровня.
+    *
+    * @todo fine Сократить конструктор: сейчас часть инфо дублируется.
     */
-    const sign_t  sign;
-    const sign_t  next;
+    const AboutContainer  about;
 
 
 
@@ -38,7 +41,8 @@ public:
         const typelib::size2Int_t&  needVisualSize,
         size_t                      radius,
         float                       density,
-        const typelib::coord2_t&    coord
+        const typelib::coord2_t&    coord,
+        const AboutContainer&
     );
 
 
@@ -53,7 +57,8 @@ public:
         const typelib::size2Int_t&  needVisualSize,
         const polygon_t&,
         float                       density,
-        const typelib::coord2_t&    coord
+        const typelib::coord2_t&    coord,
+        const AboutContainer&
     );
 
 
@@ -65,7 +70,7 @@ public:
     static std::unique_ptr< Container >  valueOf(
         std::shared_ptr< World >,
         sign_t,
-        const AboutSet&,
+        const AboutContainer&,
         const typelib::size2Int_t&  needVisualSize,
         const typelib::size2Int_t&  cell,
         const typelib::coord2_t&
@@ -78,6 +83,8 @@ public:
     * @virtual B2DIncarnate
     */
     virtual void sync();
+    virtual void selfReaction( const std::string& event );
+    virtual void collisionReaction( const GE* );
 
 };
 
@@ -102,7 +109,8 @@ public:
         const std::string&          sprite,
         const typelib::size2Int_t&  needVisualSize,
         size_t                      radius,
-        const typelib::coord2_t&    coord
+        const typelib::coord2_t&    coord,
+        const AboutContainer&
     );
 
 
@@ -130,7 +138,8 @@ public:
         const std::string&          sprite,
         const typelib::size2Int_t&  needVisualSize,
         int                         side,
-        const typelib::coord2_t&    coord
+        const typelib::coord2_t&    coord,
+        const AboutContainer&
     );
 
 

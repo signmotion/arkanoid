@@ -116,6 +116,11 @@ World::loadNextLevel( size_t startLevel ) {
     CONSOLE << "\n\nУровень " << nextLevel << std::endl;
 #endif
 
+    // прекратим звучание, удалим спрайты
+    IRRKIncarnate::stop( true );
+    PPIncarnate::clear();
+
+
     mLevel = std::unique_ptr< Level >( new Level( nextLevel ) );
 
 
@@ -149,7 +154,8 @@ World::loadNextLevel( size_t startLevel ) {
         mBackground = std::unique_ptr< Background >( new Background(
             about.sprite,
             size,
-            typelib::coord2Int_t::ZERO()
+            typelib::coord2Int_t::ZERO(),
+            about
         ) );
     }
 #endif
@@ -171,7 +177,8 @@ World::loadNextLevel( size_t startLevel ) {
                 typelib::coord2Int_t(
                     WINDOW_WIDTH / 2,
                     WINDOW_HEIGHT - size.y * 2
-                )
+                ),
+                about
             ) );
 
         } else {
@@ -202,7 +209,8 @@ World::loadNextLevel( size_t startLevel ) {
                 about.sprite,
                 typelib::size2Int_t( 32, 32 ),
                 radius,
-                mStartCoordRacket
+                mStartCoordRacket,
+                about
             ) );
 
         } else {
@@ -324,7 +332,8 @@ World::EventDraw() {
         static const size_t velocityItr = 16;
         static const size_t positionItr = 12;
         mPhysics->Step( timeStep, velocityItr, positionItr );
-        //mPhysics->ClearForces();
+        // #? Если не сбрасывать силы, получаем падение FPS.
+        mPhysics->ClearForces();
     }
 
     // графика
@@ -474,12 +483,24 @@ World::PreSolve(
 	b2Fixture* fixtureB = contact->GetFixtureB();
     const auto typeB = fixtureB->GetBody()->GetType();
 
-    /* - @test
 	b2PointState  stateA[ b2_maxManifoldPoints ];
     b2PointState  stateB[ b2_maxManifoldPoints ];
 	b2GetPointStates( stateA, stateB, oldManifold, manifold );
-    */
 
+
+    // сыграем сцены столкновений
+    if (stateB[ 0 ] == b2_addState) {
+        const auto a = static_cast< B2DIncarnate* >(
+            fixtureA->GetBody()->GetUserData()
+        );
+        const auto b = static_cast< GE* >(
+            fixtureB->GetBody()->GetUserData()
+        );
+        a->collisionReaction( b );
+    }
+
+
+    // соберём интересные на элементы для обработки позже
 	b2WorldManifold  worldManifold;
 	contact->GetWorldManifold( &worldManifold );
 	for (size_t i = 0;
@@ -589,7 +610,7 @@ World::pushRacket( bool always ) {
 
     const float mass = racket->mass();
     const float force =
-        mass * static_cast< float >( std::rand() % 3000 + 2000 );
+        mass * static_cast< float >( std::rand() % 3000 + 3000 );
     const float angle =
         static_cast< float >( std::rand() % 180 ) * 3.1416f / 180.0f;
     const auto fv =
@@ -674,7 +695,7 @@ World::reincarnateOrDie( b2Body* body ) {
 
         // смотрим, должен ли этот элемент исчезнуть окончательно или
         // на его месте надо создать нечто новое
-        const Container* container = ctr->get();
+        Container* container = ctr->get();
         const bool destroy =
             (container->next == 0) || (container->sign != container->next);
         const bool create =
@@ -683,6 +704,7 @@ World::reincarnateOrDie( b2Body* body ) {
         const typelib::coord2Int_t coord = container->coord();
         if ( destroy ) {
             // уничтожаем текущий
+            container->selfReaction( "destroy" );
             mContainerSet.erase( ctr );
         }
         if ( create ) {
@@ -716,6 +738,9 @@ World::levelCompletedAction() {
 void
 World::racketOutAction() {
 
+    auto& racket = mRacketSet.front();
+    racket->selfReaction( "out" );
+
     const Message message( "message/racket-out.png" );
     message.draw( mVisual );
     BlitWrite( 0, 0, mVisual );
@@ -724,7 +749,6 @@ World::racketOutAction() {
     boost::this_thread::sleep( boost::posix_time::seconds( 2 ) );
 
     // вернём ракетку
-    auto& racket = mRacketSet.front();
     racket->coord( mStartCoordRacket );
     racket->body()->SetLinearVelocity( b2Vec2_zero );
     racket->body()->SetAngularVelocity( 0.0f );

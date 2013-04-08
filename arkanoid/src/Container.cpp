@@ -1,6 +1,7 @@
 #include "../include/stdafx.h"
 #include "../include/Container.h"
 #include "../include/Level.h"
+#include "../include/ManagerSound.h"
 #include "../include/World.h"
 
 
@@ -15,12 +16,12 @@ Container::Container(
     const typelib::size2Int_t&  needVisualSize,
     size_t                      radius,
     float                       density,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutContainer&       about
 ) :
     PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world ),
-    sign( sign ),
-    next( next )
+    B2DIncarnate( world, sign, next ),
+    about( about )
 {
     ASSERT( (radius > 0.0f)
         && "Для контейнера необходимо указать радиус." );
@@ -56,12 +57,12 @@ Container::Container(
     const typelib::size2Int_t&  needVisualSize,
     const polygon_t&            polygon,
     float                       density,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutContainer&       about
 ) :
     PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world ),
-    sign( sign ),
-    next( next )
+    B2DIncarnate( world, sign, next ),
+    about( about )
 {
     const size_t n = polygon.size();
     {
@@ -115,7 +116,7 @@ std::unique_ptr< Container >
 Container::valueOf(
     std::shared_ptr< World >    world,
     sign_t                      sign,
-    const AboutSet&             about,
+    const AboutContainer&       about,
     const typelib::size2Int_t&  needVisualSize,
     const typelib::size2Int_t&  cell,
     const typelib::coord2_t&    coord
@@ -129,7 +130,8 @@ Container::valueOf(
             about.sprite,
             needVisualSize,
             side,
-            coord
+            coord,
+            about
         ) );
     }
 
@@ -142,9 +144,9 @@ Container::valueOf(
             about.sprite,
             needVisualSize,
             radius,
-            coord
+            coord,
+            about
         ) );
-
     }
 
     // подходящий контейнер не может быть создан
@@ -162,6 +164,38 @@ Container::sync() {
 
 
 
+void
+Container::selfReaction( const std::string& event ) {
+
+    ASSERT( !event.empty()
+        && "Событие для контейнера должно быть указано." );
+
+    if (event == "destroy") {
+        playNotEmpty( about.destroy.sound );
+
+    } else {
+        ASSERT( false
+            && "Событие для контейнера не известно." );
+    }
+}
+
+
+
+
+void
+Container::collisionReaction( const GE* ge ) {
+    
+    ASSERT( ge );
+
+    const auto ftr = about.collision.find( ge->sign );
+    if (ftr != about.collision.cend()) {
+        playNotEmpty( ftr->second.sound );
+    }
+}
+
+
+
+
 
 
 
@@ -173,7 +207,8 @@ SphereContainer::SphereContainer(
     const std::string&          sprite,
     const typelib::size2Int_t&  needVisualSize,
     size_t                      radius,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutContainer&       about
 ) :
     Container(
         world,
@@ -183,7 +218,8 @@ SphereContainer::SphereContainer(
         needVisualSize,
         radius,
         DENSITY_SPHERE_CONTAINER,
-        coord
+        coord,
+        about
     )
 {
 }
@@ -208,7 +244,8 @@ CubeContainer::CubeContainer(
     const std::string&          sprite,
     const typelib::size2Int_t&  needVisualSize,
     int                         side,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutContainer&       about
 ) :
     Container(
         world,
@@ -227,7 +264,8 @@ CubeContainer::CubeContainer(
             ( typelib::coord2_t(  side / 2,   side / 2 ) )    // 4
         ),
         DENSITY_CUBE_CONTAINER,
-        coord
+        coord,
+        about
     )
 {
 }

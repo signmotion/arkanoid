@@ -1,4 +1,5 @@
 #include "../include/stdafx.h"
+#include "../include/ManagerSound.h"
 #include "../include/ManagerSprite.h"
 #include "../include/Platform.h"
 #include "../include/World.h"
@@ -13,10 +14,12 @@ Platform::Platform(
     const typelib::size2Int_t&  needVisualSize,
     const polygon_t&            polygon,
     float                       density,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutPlatform&        about
 ) :
     PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world ),
+    B2DIncarnate( world, '_', '_' ),
+    about( about ),
     mDestination( coord )
 {
     const size_t n = polygon.size();
@@ -83,6 +86,28 @@ Platform::sync() {
 
 
 void
+Platform::selfReaction( const std::string& event ) {
+    // # Не реагирует.
+}
+
+
+
+
+void
+Platform::collisionReaction( const GE* ge ) {
+    
+    ASSERT( ge );
+
+    const auto ftr = about.collision.find( ge->sign );
+    if (ftr != about.collision.cend()) {
+        playNotEmpty( ftr->second.sound );
+    }
+}
+
+
+
+
+void
 Platform::draw( prcore::Bitmap& context ) const {
 
     using namespace prcore;
@@ -114,7 +139,8 @@ CapsulePlatform::CapsulePlatform(
     const std::string&          sprite,
     const typelib::size2Int_t&  needVisualSize,
     const typelib::size2Int_t&  size,
-    const typelib::coord2_t&    coord
+    const typelib::coord2_t&    coord,
+    const AboutPlatform&        about
 ) :
     Platform(
         world,
@@ -150,7 +176,8 @@ CapsulePlatform::CapsulePlatform(
         ),
 #endif
         DENSITY_CAPSULE_PLATFORM,
-        coord
+        coord,
+        about
     )
 {
 }

@@ -1,6 +1,5 @@
 #include "../include/stdafx.h"
 #include "../include/PPIncarnate.h"
-#include "../include/World.h"
 #include "../include/ManagerSprite.h"
 
 
@@ -78,6 +77,14 @@ PPIncarnate::centerSprite( const std::string&  sprite ) {
         WINDOW_WIDTH  / 2 - size.x / 2,
         WINDOW_HEIGHT / 2 - size.y / 2
     );
+}
+
+
+
+
+void
+PPIncarnate::clear() {
+    mManagerSprite->clear();
 }
 
 
