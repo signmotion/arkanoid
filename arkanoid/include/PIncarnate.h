@@ -15,7 +15,7 @@ class World;
 *
 * @see http://box2d.org
 */
-class B2DIncarnate :
+class PIncarnate :
     public GE
 {
 public:
@@ -28,7 +28,7 @@ protected:
     /**
     * #! Метод init() должен быть обязательно вызван потомком.
     */
-    B2DIncarnate(
+    PIncarnate(
         std::shared_ptr< World >,
         sign_t  sign,
         sign_t  next
@@ -37,7 +37,7 @@ protected:
 
 
 
-    virtual ~B2DIncarnate();
+    virtual ~PIncarnate();
 
 
 
@@ -182,7 +182,7 @@ public:
 
 
 
-    inline bool operator==( const B2DIncarnate& b ) const {
+    inline bool operator==( const PIncarnate& b ) const {
         return (body() == b.body());
     }
 

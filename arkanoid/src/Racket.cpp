@@ -15,8 +15,8 @@ Racket::Racket(
     const typelib::coord2_t&    coord,
     const AboutRacket&          about
 ) :
-    PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world, '*', '*' ),
+    VIncarnate( sprite, coord, needVisualSize ),
+    PIncarnate( world, '*', '*' ),
     about( about )
 {
     ASSERT( (radius > 0.0f)
@@ -40,7 +40,7 @@ Racket::Racket(
     const auto pc = coord;
 	bd.position.Set( pc.x, pc.y );
 
-    B2DIncarnate::init( bd, fd );
+    PIncarnate::init( bd, fd );
 }
 
 
@@ -55,8 +55,8 @@ Racket::Racket(
     const typelib::coord2_t&    coord,
     const AboutRacket&          about
 ) :
-    PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world, '*', '*' ),
+    VIncarnate( sprite, coord, needVisualSize ),
+    PIncarnate( world, '*', '*' ),
     about( about )
 {
     const size_t n = polygon.size();
@@ -96,7 +96,7 @@ Racket::Racket(
     const auto pc = coord;
 	bd.position.Set( pc.x, pc.y );
 
-    B2DIncarnate::init( bd, fd );
+    PIncarnate::init( bd, fd );
 }
 
 

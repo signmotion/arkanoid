@@ -33,9 +33,6 @@
     <ClCompile Include="src\Container.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="src\PPIncarnate.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="src\ManagerSprite.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
@@ -57,16 +54,19 @@
     <ClCompile Include="src\Message.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="src\B2DIncarnate.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="src\GE.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="src\ManagerSound.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="src\IRRKIncarnate.cpp">
+    <ClCompile Include="src\PIncarnate.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SIncarnate.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VIncarnate.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
@@ -90,9 +90,6 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="include\Container.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="include\PPIncarnate.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="include\ManagerSprite.h">
@@ -119,16 +116,19 @@
     <ClInclude Include="include\Message.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="include\B2DIncarnate.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="include\GE.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="include\IRRKIncarnate.h">
+    <ClInclude Include="include\ManagerSound.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="include\ManagerSound.h">
+    <ClInclude Include="include\PIncarnate.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\VIncarnate.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SIncarnate.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>

@@ -11,7 +11,7 @@ Border::Border(
     const typelib::coord2_t&  a,
     const typelib::coord2_t&  b
 ) :
-    B2DIncarnate( world, 0, 0 )
+    PIncarnate( world, 0, 0 )
 {
     ASSERT( (a != b)
         && " оординаты должны задавать отрезок, не точку." );
@@ -32,7 +32,7 @@ Border::Border(
     const auto pc = c;
 	bd.position.Set( pc.x, pc.y );
 
-    B2DIncarnate::init( bd, fd );
+    PIncarnate::init( bd, fd );
 }
 
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "configure.h"
-#include "PPIncarnate.h"
+#include "VIncarnate.h"
 
 
 namespace arkanoid {
@@ -11,7 +11,7 @@ namespace arkanoid {
 * # —ообщени€ - что хотим рассказать / показать игроку.
 */
 class Message :
-    public PPIncarnate
+    public VIncarnate
 {
 public:
     /**

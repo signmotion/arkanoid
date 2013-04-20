@@ -2,8 +2,8 @@
 
 #include "configure.h"
 #include "structure.h"
-#include "PPIncarnate.h"
-#include "IRRKIncarnate.h"
+#include "VIncarnate.h"
+#include "SIncarnate.h"
 
 
 namespace arkanoid {
@@ -13,8 +13,8 @@ namespace arkanoid {
 * # ќстанки - то, что может остатьс€ после уничтожени€ контейнера.
 */
 class Remains :
-    public PPIncarnate,
-    public IRRKIncarnate
+    public VIncarnate,
+    public SIncarnate
     // # ќстанки не €вл€ютс€ частью физ. мира.
 {
 public:

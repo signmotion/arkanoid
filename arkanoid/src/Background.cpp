@@ -11,7 +11,7 @@ Background::Background(
     const typelib::coord2_t&     coord,
     const AboutBackground&       about
 ) :
-    PPIncarnate( sprite, coord, needVisualSize ),
+    VIncarnate( sprite, coord, needVisualSize ),
     about( about )
 {
     // включаем фоновую музыку

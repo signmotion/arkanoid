@@ -2,9 +2,9 @@
 
 #include "configure.h"
 #include "structure.h"
-#include "B2DIncarnate.h"
-#include "PPIncarnate.h"
-#include "IRRKIncarnate.h"
+#include "PIncarnate.h"
+#include "VIncarnate.h"
+#include "SIncarnate.h"
 
 
 namespace arkanoid {
@@ -14,9 +14,9 @@ namespace arkanoid {
 * # Контейнер - то, что разбивается.
 */
 class Container :
-    public PPIncarnate,
-    public B2DIncarnate,
-    public IRRKIncarnate
+    public VIncarnate,
+    public PIncarnate,
+    public SIncarnate
 {
 public:
     /**
@@ -80,41 +80,12 @@ public:
 
 
     /**
-    * @virtual B2DIncarnate
+    * @virtual PIncarnate
     */
     virtual void sync();
     virtual void selfReaction( const std::string& event );
     virtual void collisionReaction( const GE* );
 
-};
-
-
-
-
-
-
-
-
-/**
-* Контейнер в форме сферы.
-*/
-class SphereContainer :
-    public Container
-{
-public:
-    SphereContainer(
-        std::shared_ptr< World >,
-        sign_t,
-        sign_t                      next,
-        const std::string&          sprite,
-        const typelib::size2Int_t&  needVisualSize,
-        size_t                      radius,
-        const typelib::coord2_t&    coord,
-        const AboutContainer&
-    );
-
-
-    virtual ~SphereContainer();
 };
 
 
@@ -144,6 +115,35 @@ public:
 
 
     virtual ~CubeContainer();
+};
+
+
+
+
+
+
+
+
+/**
+* Контейнер в форме сферы.
+*/
+class SphereContainer :
+    public Container
+{
+public:
+    SphereContainer(
+        std::shared_ptr< World >,
+        sign_t,
+        sign_t                      next,
+        const std::string&          sprite,
+        const typelib::size2Int_t&  needVisualSize,
+        size_t                      radius,
+        const typelib::coord2_t&    coord,
+        const AboutContainer&
+    );
+
+
+    virtual ~SphereContainer();
 };
 
 

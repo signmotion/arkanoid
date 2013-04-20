@@ -1,18 +1,18 @@
 #pragma once
 
 #include "configure.h"
-#include "B2DIncarnate.h"
-#include "PPIncarnate.h"
-#include "IRRKIncarnate.h"
+#include "PIncarnate.h"
+#include "VIncarnate.h"
+#include "SIncarnate.h"
 
 
 namespace arkanoid {
 
 
 class Racket :
-    public PPIncarnate,
-    public B2DIncarnate,
-    public IRRKIncarnate
+    public VIncarnate,
+    public PIncarnate,
+    public SIncarnate
 {
 public:
     /**
@@ -60,7 +60,7 @@ public:
 
 
     /**
-    * @virtual B2DIncarnate
+    * @virtual PIncarnate
     */
     virtual void sync();
     virtual void selfReaction( const std::string& event );

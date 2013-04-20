@@ -11,7 +11,7 @@ void run( size_t startLevel );
 
 
 /**
-* Переписанная через OpenCL демо-версия MatchN5.
+* Классический арканоид по мотивам Dungeon Crawl Stone Soup.
 */
 int
 main( int argc, char** argv ) {

@@ -1,19 +1,19 @@
 #include "../include/stdafx.h"
-#include "../include/PPIncarnate.h"
+#include "../include/VIncarnate.h"
 #include "../include/ManagerSprite.h"
 
 
 namespace arkanoid {
 
 
-std::unique_ptr< ManagerSprite >  PPIncarnate::mManagerSprite(
+std::unique_ptr< ManagerSprite >  VIncarnate::mManagerSprite(
     new ManagerSprite()
 );
 
 
 
 
-PPIncarnate::PPIncarnate(
+VIncarnate::VIncarnate(
     const std::string&           sprite,
     const typelib::coord2Int_t&  vc,
     const typelib::size2Int_t&   needVisualSize
@@ -34,14 +34,14 @@ PPIncarnate::PPIncarnate(
 
 
 
-PPIncarnate::~PPIncarnate() {
+VIncarnate::~VIncarnate() {
 }
 
 
 
 
 void
-PPIncarnate::draw( prcore::Bitmap& context ) const {
+VIncarnate::draw( prcore::Bitmap& context ) const {
 
     using namespace prcore;
 
@@ -63,7 +63,7 @@ PPIncarnate::draw( prcore::Bitmap& context ) const {
 
 
 typelib::size2Int_t
-PPIncarnate::sizeSprite( const std::string&  sprite ) {
+VIncarnate::sizeSprite( const std::string&  sprite ) {
     return mManagerSprite->sizeSprite( PATH_MEDIA + "/" + sprite );
 }
 
@@ -71,7 +71,7 @@ PPIncarnate::sizeSprite( const std::string&  sprite ) {
 
 
 typelib::coord2Int_t
-PPIncarnate::centerSprite( const std::string&  sprite ) {
+VIncarnate::centerSprite( const std::string&  sprite ) {
     const auto size = sizeSprite( sprite );
     return typelib::coord2Int_t(
         WINDOW_WIDTH  / 2 - size.x / 2,
@@ -83,7 +83,7 @@ PPIncarnate::centerSprite( const std::string&  sprite ) {
 
 
 void
-PPIncarnate::clear() {
+VIncarnate::clear() {
     mManagerSprite->clear();
 }
 

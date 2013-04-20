@@ -11,7 +11,7 @@ class Background;
 class Border;
 class Container;
 class Level;
-class B2DIncarnate;
+class PIncarnate;
 class Platform;
 class Racket;
 class Remains;
@@ -149,17 +149,18 @@ private:
     * Слушатели событий физического мира.
     */
 	inline virtual void BeginContact( b2Contact* contact ) {
-        NOT_USED( contact );
     }
 
+
 	inline virtual void EndContact( b2Contact* contact ) {
-        NOT_USED( contact );
     }
+
 
 	virtual void PreSolve(
         b2Contact*         contact,
         const b2Manifold*  oldManifold
     );
+
 
 	virtual void PostSolve(
         const b2Contact*         contact,

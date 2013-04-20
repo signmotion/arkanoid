@@ -9,10 +9,10 @@ Message::Message(
     const std::string&        sprite,
     const typelib::coord2_t&  coord
 ) :
-    PPIncarnate(
+    VIncarnate(
         sprite,
         (coord == typelib::coord2_t::ZERO())
-          ? PPIncarnate::centerSprite( sprite )
+          ? VIncarnate::centerSprite( sprite )
           : coord
     )
 {

@@ -17,8 +17,8 @@ Platform::Platform(
     const typelib::coord2_t&    coord,
     const AboutPlatform&        about
 ) :
-    PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world, '_', '_' ),
+    VIncarnate( sprite, coord, needVisualSize ),
+    PIncarnate( world, '_', '_' ),
     about( about ),
     mDestination( coord )
 {
@@ -62,7 +62,7 @@ Platform::Platform(
     const auto pc = coord;
 	bd.position.Set( pc.x, pc.y );
 
-    B2DIncarnate::init( bd, fd );
+    PIncarnate::init( bd, fd );
 }
 
 
@@ -121,7 +121,7 @@ Platform::draw( prcore::Bitmap& context ) const {
 
     SetAlphaFunc( SRCALPHA, SRCINVALPHA );
     SetConstantAlpha( 0xFF, 0xFF );
-    // @todo fine Согласовать физ. модель с визуальной на уровне PPIncarnate.
+    // @todo fine Согласовать физ. модель с визуальной на уровне VIncarnate.
     const auto shift = needVisualSize / 2;
     const auto vc = visualCoord();
     AlphaBlend( vc.x - shift.x,  vc.y + shift.y,  context,  *s );

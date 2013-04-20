@@ -1,12 +1,12 @@
 #include "../include/stdafx.h"
-#include "../include/B2DIncarnate.h"
+#include "../include/PIncarnate.h"
 #include "../include/World.h"
 
 
 namespace arkanoid {
     
     
-B2DIncarnate::B2DIncarnate(
+PIncarnate::PIncarnate(
     std::shared_ptr< World >  world,
     sign_t  sign,
     sign_t  next
@@ -26,7 +26,7 @@ B2DIncarnate::B2DIncarnate(
 
 
 
-B2DIncarnate::~B2DIncarnate() {
+PIncarnate::~PIncarnate() {
     if ( mBody && world() ) {
         world()->DestroyBody( mBody );
     }
@@ -36,7 +36,7 @@ B2DIncarnate::~B2DIncarnate() {
 
 
 void
-B2DIncarnate::init(
+PIncarnate::init(
     const b2BodyDef&     bd,
     const b2FixtureDef&  fd
 ) {
@@ -51,7 +51,7 @@ B2DIncarnate::init(
 
 
 const b2World*
-B2DIncarnate::world() const {
+PIncarnate::world() const {
     return mWorld.lock()->physics().get();
 }
 
@@ -59,7 +59,7 @@ B2DIncarnate::world() const {
 
 
 b2World*
-B2DIncarnate::world() {
+PIncarnate::world() {
     return mWorld.lock()->physics().get();
 }
 

@@ -117,8 +117,8 @@ World::loadNextLevel( size_t startLevel ) {
 #endif
 
     // прекратим звучание, удалим спрайты
-    IRRKIncarnate::stop( true );
-    PPIncarnate::clear();
+    SIncarnate::stop( true );
+    VIncarnate::clear();
 
 
     mLevel = std::unique_ptr< Level >( new Level( nextLevel ) );
@@ -332,9 +332,9 @@ World::EventDraw() {
         static const size_t velocityItr = 16;
         static const size_t positionItr = 12;
         mPhysics->Step( timeStep, velocityItr, positionItr );
-        // #? Если не сбрасывать силы, получаем падение FPS.
-        mPhysics->ClearForces();
+        //mPhysics->ClearForces();
     }
+
 
     // графика
     {
@@ -490,7 +490,7 @@ World::PreSolve(
 
     // сыграем сцены столкновений
     if (stateB[ 0 ] == b2_addState) {
-        const auto a = static_cast< B2DIncarnate* >(
+        const auto a = static_cast< PIncarnate* >(
             fixtureA->GetBody()->GetUserData()
         );
         const auto b = static_cast< GE* >(
@@ -542,8 +542,6 @@ World::PostSolve(
     const b2Contact*         contact,
     const b2ContactImpulse*  impulse
 ) {
-    NOT_USED( contact );
-    NOT_USED( impulse );
 }
 
 

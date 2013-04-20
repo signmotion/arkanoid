@@ -33,7 +33,8 @@ http://microsoft.com/ru-ru/download/details.aspx?id=5555
   * Phrophecy SDK > http://twilight3d.com
   * Box2D         > http://box2d.org
   * BOOST         > http://boost.org
-  * typelib       > https://github.com/savdalion/typelib
+  * irrKlang      > http://ambiera.com/irrklang
+  * typelib       > http://github.com/savdalion/typelib
 Все зависимости, кроме BOOST, включены в папку 'external'.
 Параметры сборки и демонстрация игры (видео) > http://youtu.be/0yDIJx_vcr4
 

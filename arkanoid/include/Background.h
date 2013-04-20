@@ -2,16 +2,16 @@
 
 #include "configure.h"
 #include "structure.h"
-#include "PPIncarnate.h"
-#include "IRRKIncarnate.h"
+#include "VIncarnate.h"
+#include "SIncarnate.h"
 
 
 namespace arkanoid {
 
 
 class Background :
-    public PPIncarnate,
-    public IRRKIncarnate
+    public VIncarnate,
+    public SIncarnate
     // # Фон не является частью физ. мира.
 {
 public:

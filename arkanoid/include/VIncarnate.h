@@ -15,7 +15,7 @@ class ManagerSprite;
 *
 * @see http://twilight3d.com
 */
-class PPIncarnate {
+class VIncarnate {
 public:
     const std::string          sprite;
     const typelib::size2Int_t  originalVisualSize;
@@ -28,14 +28,14 @@ protected:
     /**
     * Если 'needVisualSize' не указан, будет взят оригинальный размер спрайта.
     */
-    PPIncarnate(
+    VIncarnate(
         const std::string&           sprite,
         const typelib::coord2Int_t&  vc,
         const typelib::size2Int_t&   needVisualSize = typelib::size2Int_t::ZERO()
     );
 
 
-    virtual ~PPIncarnate();
+    virtual ~VIncarnate();
 
 
 

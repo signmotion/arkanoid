@@ -19,8 +19,8 @@ Container::Container(
     const typelib::coord2_t&    coord,
     const AboutContainer&       about
 ) :
-    PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world, sign, next ),
+    VIncarnate( sprite, coord, needVisualSize ),
+    PIncarnate( world, sign, next ),
     about( about )
 {
     ASSERT( (radius > 0.0f)
@@ -43,7 +43,7 @@ Container::Container(
     const auto pc = coord;
 	bd.position.Set( pc.x, pc.y );
 
-    B2DIncarnate::init( bd, fd );
+    PIncarnate::init( bd, fd );
 }
 
 
@@ -60,8 +60,8 @@ Container::Container(
     const typelib::coord2_t&    coord,
     const AboutContainer&       about
 ) :
-    PPIncarnate( sprite, coord, needVisualSize ),
-    B2DIncarnate( world, sign, next ),
+    VIncarnate( sprite, coord, needVisualSize ),
+    PIncarnate( world, sign, next ),
     about( about )
 {
     const size_t n = polygon.size();
@@ -100,7 +100,7 @@ Container::Container(
     const auto pc = coord;
 	bd.position.Set( pc.x, pc.y );
 
-    B2DIncarnate::init( bd, fd );
+    PIncarnate::init( bd, fd );
 }
 
 
@@ -200,43 +200,6 @@ Container::collisionReaction( const GE* ge ) {
 
 
 
-SphereContainer::SphereContainer(
-    std::shared_ptr< World >    world,
-    sign_t                      sign,
-    sign_t                      next,
-    const std::string&          sprite,
-    const typelib::size2Int_t&  needVisualSize,
-    size_t                      radius,
-    const typelib::coord2_t&    coord,
-    const AboutContainer&       about
-) :
-    Container(
-        world,
-        sign,
-        next,
-        sprite,
-        needVisualSize,
-        radius,
-        DENSITY_SPHERE_CONTAINER,
-        coord,
-        about
-    )
-{
-}
-
-
-
-
-SphereContainer::~SphereContainer() {
-}
-
-
-
-
-
-
-
-
 CubeContainer::CubeContainer(
     std::shared_ptr< World >    world,
     sign_t                      sign,
@@ -274,6 +237,43 @@ CubeContainer::CubeContainer(
 
 
 CubeContainer::~CubeContainer() {
+}
+
+
+
+
+
+
+
+
+SphereContainer::SphereContainer(
+    std::shared_ptr< World >    world,
+    sign_t                      sign,
+    sign_t                      next,
+    const std::string&          sprite,
+    const typelib::size2Int_t&  needVisualSize,
+    size_t                      radius,
+    const typelib::coord2_t&    coord,
+    const AboutContainer&       about
+) :
+    Container(
+        world,
+        sign,
+        next,
+        sprite,
+        needVisualSize,
+        radius,
+        DENSITY_SPHERE_CONTAINER,
+        coord,
+        about
+    )
+{
+}
+
+
+
+
+SphereContainer::~SphereContainer() {
 }
 
 

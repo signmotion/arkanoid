@@ -14,12 +14,12 @@ class ManagerSound;
 *
 * @see ManagerSound
 */
-class IRRKIncarnate {
+class SIncarnate {
 protected:
-    IRRKIncarnate();
+    SIncarnate();
 
 
-    virtual ~IRRKIncarnate();
+    virtual ~SIncarnate();
 
 
 

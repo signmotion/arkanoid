@@ -2,15 +2,15 @@
 
 #include "configure.h"
 #include "structure.h"
-#include "B2DIncarnate.h"
-#include "PPIncarnate.h"
+#include "PIncarnate.h"
+#include "VIncarnate.h"
 
 
 namespace arkanoid {
 
 
 class Border :
-    public B2DIncarnate
+    public PIncarnate
 {
 public:
     Border(
@@ -26,7 +26,7 @@ public:
 
 
     /**
-    * @virtual B2DIncarnate
+    * @virtual PIncarnate
     */
     virtual void sync();
     virtual void selfReaction( const std::string& event );

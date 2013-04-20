@@ -11,7 +11,7 @@ Remains::Remains(
     const typelib::coord2_t&     coord,
     const AboutRemains&          about
 ) :
-    PPIncarnate( sprite, coord, needVisualSize ),
+    VIncarnate( sprite, coord, needVisualSize ),
     about( about )
 {
 }

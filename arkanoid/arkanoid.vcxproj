@@ -90,7 +90,6 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>prcore.lib;Box2D.lib;irrKlang.lib;ddraw.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <SubSystem>NotSet</SubSystem>
     </Link>
     <PostBuildEvent>
       <Command>xcopy media\*.level V:\bin\arkanoid\Release\media\ /E /Y</Command>
@@ -98,7 +97,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\GE.cpp" />
-    <ClCompile Include="src\IRRKIncarnate.cpp" />
+    <ClCompile Include="src\SIncarnate.cpp" />
     <ClCompile Include="src\ManagerSound.cpp" />
     <ClCompile Include="src\Message.cpp" />
     <ClCompile Include="src\Background.cpp" />
@@ -107,9 +106,9 @@
     <ClCompile Include="src\Platform.cpp" />
     <ClCompile Include="src\Racket.cpp" />
     <ClCompile Include="src\ManagerSprite.cpp" />
-    <ClCompile Include="src\PPIncarnate.cpp" />
+    <ClCompile Include="src\VIncarnate.cpp" />
     <ClCompile Include="src\Container.cpp" />
-    <ClCompile Include="src\B2DIncarnate.cpp" />
+    <ClCompile Include="src\PIncarnate.cpp" />
     <ClCompile Include="src\Level.cpp" />
     <ClCompile Include="src\Console.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
@@ -118,7 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\GE.h" />
-    <ClInclude Include="include\IRRKIncarnate.h" />
+    <ClInclude Include="include\SIncarnate.h" />
     <ClInclude Include="include\ManagerSound.h" />
     <ClInclude Include="include\Message.h" />
     <ClInclude Include="include\Background.h" />
@@ -131,8 +130,8 @@
     <ClInclude Include="include\structure.h" />
     <ClInclude Include="include\World.h" />
     <ClInclude Include="include\Level.h" />
-    <ClInclude Include="include\B2DIncarnate.h" />
-    <ClInclude Include="include\PPIncarnate.h" />
+    <ClInclude Include="include\PIncarnate.h" />
+    <ClInclude Include="include\VIncarnate.h" />
     <ClInclude Include="include\ManagerSprite.h" />
     <ClInclude Include="include\Platform.h" />
     <ClInclude Include="include\Racket.h" />

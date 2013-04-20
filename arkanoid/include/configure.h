@@ -51,13 +51,23 @@ static const float DENSITY_SPHERE_CONTAINER = 0.0f;
 /**
 * Для отладки.
 */
+#ifdef _DEBUG
 #define ASSERT(EXPR)   assert(EXPR);
 #define DASSERT(EXPR)  if (!(EXPR)) __debugbreak();
-#define NOT_USED(x)    ((void)(x))
 
+#define QUOTE_(WHAT)      #WHAT
+#define QUOTE(WHAT)       QUOTE_(WHAT)
+#define DBG(format, ...)  printf("%s: "format, __FILE__":"QUOTE(__LINE__), ## __VA_ARGS__)
 
-// @see Console
 #define CONSOLE  Console::instance()
+
+#else
+#define ASSERT(EXPR)      ((void)0)
+#define DASSERT(EXPR)     ((void)0)
+#define DBG(format, ...)  ((void)0)
+#define CONSOLE           ((void)0)
+
+#endif
 
 
 } // arkanoid
